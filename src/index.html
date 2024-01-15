@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Project Viewer</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <main>
+      <nav id="nav-menu">
+        <button class="goToPage menu-item" data-href="./pages/home/index.html">Home</button>
+        <button class="goToPage menu-item" data-href="./pages/newProject/index.html">New Project</button>
+        <button class="goToPage menu-item" data-href="./pages/pending/index.html">Pending</button>
+        <button class="goToPage menu-item" data-href="./pages/inProgress/index.html">In Progress</button>
+        <button class="goToPage menu-item" data-href="./pages/completed/index.html">Completed</button>
+        <button class="goToPage menu-item active" data-href="./pages/archived/index.html">Archived</button>
+        <button class="goToPage menu-item" data-href="./pages/settings/index.html">Settings</button>
+      </nav>
+      <section class="content">
+        <h1>💖 Hello World!</h1>
+        <p>Welcome to your Electron application.</p>
+      </section>
+    </main>
+    <script type="module">
+      window.addEventListener('load', (ev) => {
+        console.log('document loaded');
+        window.location.href = './pages/home/index.html';
+      });
+    </script>
+  </body>
+</html>

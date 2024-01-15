@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello World!</title>
+    <link rel="stylesheet" href="../../css/globals.css" />
+  </head>
+  <style>
+    form {
+      margin-left: 50px;
+      margin-top: 20px;
+    }
+
+    form label {
+      color: #fff;
+    }
+  </style>
+  <body>
+    <main>
+      <nav id="nav-menu">
+        <button class="goToPage menu-item" data-href="../home/index.html">Home</button>
+        <button class="goToPage menu-item" data-href="../newProject/index.html">New Project</button>
+        <button class="goToPage menu-item" data-href="../pending/index.html">Pending</button>
+        <button class="goToPage menu-item" data-href="../inProgress/index.html">In Progress</button>
+        <button class="goToPage menu-item" data-href="../completed/index.html">Completed</button>
+        <button class="goToPage menu-item" data-href="../archived/index.html">Archived</button>
+        <button class="goToPage menu-item active" data-href="../settings/index.html">Settings</button>
+      </nav>
+      <section class="content">
+        <div class="page-heading">Pending Projects</div>
+        <div class="grid-container">
+          <form name="driveLetterSpecification">
+            <label for="driveLetter">Specify Drive Letter</label><br/>
+            <input type="text" name="driveLetter" id="driveLetter" placeholder="Specifiy Drive Letter" required/>
+            <input type="submit" value="Submit" />
+          </form>
+
+          <div class="file-preview">
+            <p class="file-preview-heading">...</p>
+            <div id="svg"></div>
+            <div id="svg-converted"></div>
+            <div class="space-buffer"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script type="module">
+
+      import { getDBFile, writeToFile } from '../../js/api.js';
+      import * as pageUtils from '../../js/utils.js';
+
+      pageUtils.menuNavigation();
+      pageUtils.pageChangeFade();
+
+      const getFile = document.querySelector('.getFile');
+      const fileDataP = document.querySelector('.fileData');
+      const theForms = document.querySelectorAll('form');
+
+      const formSubmitted = (submittedForm) => {
+        pageUtils.driveLetterSpecification(submittedForm['driveLetter'].value);
+
+      }
+
+      theForms.forEach((form) => {
+        form.addEventListener('submit', (ev) => {
+          ev.preventDefault();
+          formSubmitted(ev.target);
+        })
+        // if (form.name == 'driveLetterSpecification') {
+        //   pageUtils.driveLetterSpecification(form);
+        // }
+      })
+
+      
+
+    //   window.addEventListener('load', (ev) => {
+    //     console.log('document loaded');
+    //     const fileData = window.api.getFile();
+    //     fileDataP.innerHTML = fileData;
+    //   });
+
+    //   getFile.addEventListener('click', () => {
+    //     getDBFile();
+    //   });
+
+      // theForm.addEventListener('submit', (e) => {
+      //   e.preventDefault();
+      //   const name = document.querySelector('#name').value;
+      //   const age = document.querySelector('#age').value;
+      //   const data = { name, age };
+      //   writeToFile(JSON.stringify(data));
+      //   console.log('data written to file');
+      // });
+
+      window.api.onFileResponse((data) => {
+        console.log(data); // prints the content of data.json
+        //fileDataP.innerHTML = data;
+        fileDataP.innerHTML = data
+    });
+
+    </script>
+  </body>
+</html>

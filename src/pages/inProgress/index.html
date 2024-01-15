@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello World!</title>
+    <link rel="stylesheet" href="../../css/globals.css" />
+  </head>
+  <body>
+    <main>
+      <nav id="nav-menu">
+        <button class="goToPage menu-item" data-href="../home/index.html">Home</button>
+        <button class="goToPage menu-item" data-href="../newProject/index.html">New Project</button>
+        <button class="goToPage menu-item" data-href="../pending/index.html">Pending</button>
+        <button class="goToPage menu-item active" data-href="../inProgress/index.html">In Progress</button>
+        <button class="goToPage menu-item" data-href="../completed/index.html">Completed</button>
+        <button class="goToPage menu-item" data-href="../archived/index.html">Archived</button>
+        <button class="goToPage menu-item" data-href="../settings/index.html">Settings</button>
+      </nav>
+      <section class="content">
+        <div class="page-heading">In Progress</div>
+        <div class="grid-container">
+          <div id="projects"></div>
+
+          <div class="file-preview">
+            <p class="file-preview-heading">...</p>
+            <div id="svg"></div>
+            <div id="svg-converted"></div>
+            <div class="space-buffer"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script type="module">
+
+      import { getDBFile, writeToFile } from '../../js/api.js';
+      import * as fileHandler from '../../js/fileHandler.js';
+      import * as pageUtils from '../../js/utils.js';
+    //   import * as dbUtils from '../../js/db-utils.js';
+
+    //   pageUtils.menuNavigation();
+    //   pageUtils.pageChangeFade();
+      
+    //   //fileHandler.getDBFileAddToLocal('inProgress');
+    //   //fileHandler.watchDBFile('inProgress');
+
+    //   const getPageProjects = async () => {
+    //     const projectList = document.querySelector('#projects');
+    //     const r = await dbUtils.dbInteractionCall('get', 'inProgress', 'list');
+
+    //     console.log(r);
+
+    //     await dbUtils.dbReturnedInteractionCall();
+
+    //     // console.log(resultCall);
+
+    //     // console.log(result);
+
+    //     //window.sessionStorage.setItem('pending', result );
+
+    //     try {
+    //       const cardList = fileHandler.populatePageWithSessionStorage('inProgress');
+    //       projectList.appendChild(cardList);
+    //     } 
+    //     catch (e) {
+    //       console.log(e)
+    //     }
+    //   }
+
+
+      
+    //   //const projectList = document.querySelector('#projects');
+
+    //   getPageProjects();
+
+    //   // const cardList = fileHandler.populatePageWithLocalStorage('inProgress');
+    //   // const projectList = document.querySelector('#projects');
+      
+    //   // projectList.appendChild(cardList);
+
+    //   // const theForm = document.querySelector('form');
+
+    //   // window.addEventListener('load', (ev) => {
+    //   //   console.log('document loaded');
+    //   //   const fileData = window.api.getFile('inProgress');
+    //   //   fileDataP.innerHTML = fileData;
+    //   // });
+
+    //   // getFile.addEventListener('click', () => {
+    //   //   getDBFile('inProgress');
+    //   // });
+
+    //   // theForm.addEventListener('submit', (e) => {
+    //   //   e.preventDefault();
+    //   //   const name = document.querySelector('#name').value;
+    //   //   const age = document.querySelector('#age').value;
+    //   //   const data = { name, age };
+    //   //   writeToFile(JSON.stringify(data));
+    //   //   console.log('data written to file');
+    //   // });
+
+    // //   window.api.onFileResponse((data) => {
+    // //     console.log(data); // prints the content of data.json
+    // //     //fileDataP.innerHTML = data;
+    // //     fileDataP.innerHTML = data
+    // // });
+
+    import * as dbUtils from '../../js/db-utils.js';
+
+    pageUtils.menuNavigation();
+    pageUtils.pageChangeFade();
+
+    const getPageProjects = () => {
+      const projectList = document.querySelector('#projects');
+      dbUtils.dbInteractionCall('get', 'inProgress', 'list');
+
+      const addToPage = () => {
+        try {
+          setTimeout(() => {
+            const cardList = fileHandler.populatePageWithSessionStorage('inProgress');
+            projectList.appendChild(cardList);
+          }, 100);
+        } 
+        catch (e) {
+          console.log(e)
+        }
+      }
+      addToPage();
+    }
+
+    getPageProjects();
+
+    </script>
+  </body>
+</html>

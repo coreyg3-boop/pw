@@ -1,0 +1,62 @@
+body {
+    overflow: hidden;
+}
+
+body > main section.content {
+    padding: 0;
+    width: 100%;
+    background-color: #000000;
+    background-image: linear-gradient(315deg, #000000 0%, #414141 74%);
+    overflow: hidden;
+}
+
+.page-heading {
+    width: 100%;
+    height: 2em;
+    font-size: 2.5em;
+    line-height: 2em;
+    background-color: rgb(37, 37, 37);
+    font-family: 'Roboto', sans-serif;
+    padding-left: 50px;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+    color: #adadad;
+    -webkit-box-shadow: inset 0 -5px 45px rgba(100, 100, 100, 0.4),
+    0 1px 1px rgba(255, 255, 255, 0.2);
+
+    box-shadow: inset 0 -5px 45px rgba(100, 100, 100, 0.4),
+    0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 0.5fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 10px 10px;
+    grid-template-areas:
+        "form preview";
+    overflow: hidden;
+    transition: all 0.25s ease-in-out;
+}
+
+.grid-container:has(div.file-preview.has-elements) {
+    grid-template-columns: 1fr 1.25fr;
+    transition: all 0.25s ease-in-out;
+}
+
+.file-preview {
+    grid-area: preview;
+    height: 100svh;
+    border: 1px solid rgb(173, 173, 173, 0.3);
+    float: right;
+    background-color: #414141;
+    box-shadow: -5px 5px 10px rgba(0,0,0,0.5);
+}
+
+#projects {
+    grid-area: form;
+    width: 99%;
+    padding: 40px 10px;
+    border-radius: 10px;
+    height: 84svh;
+    overflow-y: scroll;
+}
