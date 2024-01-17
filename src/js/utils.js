@@ -125,6 +125,9 @@ const moveToNewStatus = (thisCard, status, cutTime) => {
   // }
 
 
+  console.log(projects)
+  console.log(thisCard)
+
 
 
 
@@ -180,13 +183,18 @@ const makeCard = (project) => {
                   <p>Files: <br/>
                   <p>${
                     (function() {
-                      const projectFiles = project.fileNamesList.split(',');
-                      let projectFileSpans = '';
-                      console.log(projectFiles)
-                      projectFiles.forEach((item, index) => {
-                        projectFileSpans += '<span class="project-file" data-file-name="' + item + '">' + item + '</span><br/>'
-                      });
-                      return projectFileSpans;
+                      const projectFiles = project.fileNamesList;
+                      if (projectFiles != null) {
+                        const projectFilesSplit = projectFiles.split(',');
+                        let projectFileSpans = '';
+                        console.log(projectFiles);
+                        projectFilesSplit.forEach((item, index) => {
+                          projectFileSpans += '<span class="project-file" data-file-name="' + item + '">' + item + '</span><br/>'
+                        });
+                        return projectFileSpans;
+                      } else {
+                        console.log('projectFiles ==> ', projectFiles,  null)
+                      }
                     })()
                   }</p>
                   </p>
@@ -248,15 +256,15 @@ const makeCard = (project) => {
     } 
   });
 
-  fileNames.forEach((fileName) => {
-    const cadView = document.getElementById('cad-view');
-    const dxfContent = document.getElementById('dxf-content');
-    console.log(cadView)
-    fileName.addEventListener('click', function() {
-      const filePath = 'X:\\waterjetDashboard\\pending\\' + project.client_name + '\\' + project.project_name + '\\' +fileName.dataset.fileName;
+  // fileNames.forEach((fileName) => {
+  //   const cadView = document.getElementById('cad-view');
+  //   const dxfContent = document.getElementById('dxf-content');
+  //   console.log(cadView)
+  //   fileName.addEventListener('click', function() {
+  //     const filePath = 'X:\\waterjetDashboard\\pending\\' + project.client_name + '\\' + project.project_name + '\\' +fileName.dataset.fileName;
 
-    })
-  })
+  //   })
+  // })
 
   card.appendChild(button);
   return card

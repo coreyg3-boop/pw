@@ -9,8 +9,13 @@ contextBridge.exposeInMainWorld('api', {
     writeToFile: (data, fileName, specifiedDriveLetter) => ipcRenderer.send('write-to-file', data, fileName, specifiedDriveLetter),
     onWriteToFileResponse: (func) => ipcRenderer.on('file-written-to', (event, data, fileName) => func(data, fileName)),
     watchFile: (fileName, specifiedDriveLetter) => ipcRenderer.send('watch-file', fileName, specifiedDriveLetter),
+    getUpdatedPendingOrder: (func) => ipcRenderer.on('pending-order-changed', () => func()),
     dbInteraction: (interaction, intendedQuery, projectData) => ipcRenderer.send('database-interaction', interaction, intendedQuery, projectData),
     dbInteractionResponse: (func) => ipcRenderer.on('database-interaction-response', (event, data) => func(data)),
     onFileChange: (func) => ipcRenderer.on('file-changed', (event, path) => func(path)),
     openFileInApplication: (projectPath, specifiedDriveLetter) => ipcRenderer.send('open-file-in-application', projectPath, specifiedDriveLetter)
 });
+
+ipcRenderer.on("test", (e, arg) => {
+	console.log("IPC RENDERER TEST")
+})

@@ -14,4 +14,20 @@ const writeToFile = (data, fileName) => {
     window.api.writeToFile(data, fileName, specifiedDriveLetter);
 }
 
-export { getDBFile, writeToFile }
+const watchPendingOrderFile = () => {
+    console.log('watching pending order file!');
+    window.api.watchFile();
+    window.api.getUpdatedPendingOrder(() => {
+        console.log('pending order file has changed!!!');
+    });
+}
+
+console.log(window)
+
+
+
+const getPendingOrder = () => {
+
+}
+
+export { getDBFile, writeToFile, watchPendingOrderFile }

@@ -6,15 +6,15 @@ const getSpecifiedDriveLetter = () => {
     return specifiedDriveLetter;
 }
 
-const watchDBFile = (fileName) => {
-    window.api.watchFile(fileName, specifiedDriveLetter);
+// const watchDBFile = (fileName) => {
+//     window.api.watchFile(fileName, specifiedDriveLetter);
 
-    window.api.onFileChange((path) => {
-        const fileName = path.split('.')[0];
-        getDBFileAddToLocal(fileName);
-        console.log('file changed', path, fileName);
-    });
-}
+//     window.api.onFileChange((path) => {
+//         const fileName = path.split('.')[0];
+//         getDBFileAddToLocal(fileName);
+//         console.log('file changed', path, fileName);
+//     });
+// }
 
 const populatePageWithSessionStorage = (dataName) => {
     const sessionData = window.sessionStorage;
@@ -48,4 +48,4 @@ const createOrRelocateDirectory = (action, projectSpecs) => {
     window.api.createOrRelocateDirectory(action, projectSpecs, specifiedDriveLetter);
 }
 
-export { watchDBFile, populatePageWithSessionStorage, openFileInProgram, createOrRelocateDirectory, getSpecifiedDriveLetter }
+export { populatePageWithSessionStorage, openFileInProgram, createOrRelocateDirectory, getSpecifiedDriveLetter }

@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Hello World!</title>
+    <title>Project Viewer - Pending Projects</title>
     <link rel="stylesheet" href="../../css/globals.css" />
     <link rel="stylesheet" href="./index.css" />
   </head>
@@ -32,10 +32,12 @@
       </section>
     </main>
     <script type="module">
-      //import { getDBFile, writeToFile } from '../../js/api.js';
+      import { watchPendingOrderFile } from '../../js/api.js';
       import * as fileHandler from '../../js/fileHandler.js';
       import * as pageUtils from '../../js/utils.js';
       import * as dbUtils from '../../js/db-utils.js';
+
+      watchPendingOrderFile();
 
       pageUtils.menuNavigation();
       pageUtils.pageChangeFade();

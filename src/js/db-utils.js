@@ -77,10 +77,15 @@ const dbInteractionCall = (task, status, project) => {
     window.api.dbInteraction('insert' , intendedQuery, projectData);
 
     window.api.dbInteractionResponse((data) => {
-      const dataString = JSON.stringify(data);
+        console.log(data)
+        if (data == 'success!') {
+            getProjectList(status);
+        } else {
+            const dataString = JSON.stringify(data);
 
-      window.sessionStorage.setItem(status, dataString)
-      return data;
+            window.sessionStorage.setItem(status, dataString);
+            return data;
+        }
     })
 }
 

@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Hello World!</title>
+    <title>Project Viewer - New Project</title>
     <link rel="stylesheet" href="../../css/globals.css" />
     <link rel="stylesheet" href="./index.css" />
     <script src="../../../node_modules/dxf/dist/dxf.js"></script>
@@ -350,13 +350,18 @@
         let projectFileSpans = '';
 
         projectFiles.forEach((file, index) => {
-          projectFileSpans += file.name + '.' + file.type + ','
+          projectFileSpans += file.name + '.' + file.type
+          if (projectFiles.length != index + 1) {
+            projectFileSpans += ','
+          }
         });
         console.log(projectFileSpans);
 
         JSONppd['fileNamesList'] = projectFileSpans;
 
         const strungOutJSONppd = JSON.stringify(JSONppd);
+
+        console.log(strungOutJSONppd);
 
         //dbUtils.dbInteractionCall('create', 'pending', pendingProjectData);
         dbUtils.dbInteractionCall('create', 'pending', strungOutJSONppd);                  
@@ -373,7 +378,8 @@
           }
         }
 
-        fileHandler.createOrRelocateDirectory('create', JSON.parse(pendingProjectData));
+        //fileHandler.createOrRelocateDirectory('create', JSON.parse(pendingProjectData));
+        fileHandler.createOrRelocateDirectory('create', JSON.parse(strungOutJSONppd));
 
         console.log('data written to db');
       });

@@ -1,14 +1,16 @@
-const { app, BrowserWindow, ipcMain, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, shell, ipcRenderer, globalShortcut } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const fse = require('fs-extra');
 // Get the client
 const mysql = require('mysql2');
+const chokidar = require('chokidar');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
   app.quit();
 }
+
 
 ipcMain.on('get-file', (event, fileName, specifiedDriveLetter) => {
   const pathString = path.join(specifiedDriveLetter + '\\waterjetData\\' + fileName + '.json');
@@ -188,18 +190,32 @@ ipcMain.on('write-to-file', (event, data, fileName, specifiedDriveLetter) => {
   }
 });
 
-ipcMain.on('watch-file', (event, fileName, specifiedDriveLetter) => {
-  const pathString = path.join(specifiedDriveLetter + '\\waterjetData\\' + fileName + '.json');
+chokidar.watch('X:/waterjetData/pendingOrder.txt').on('all', (event, path) => {
+  console.log(event, path);
+  //emitFileChange();
+  ipcMain.emit('watch-file');
+});
 
-  if (fs.existsSync(path.join(specifiedDriveLetter + '\\waterjetData\\'))) {
-    fs.watch(pathString, (eventType, filename) => {
-      if (filename) {
-        event.sender.send('file-changed', filename)
-      }
-    });
-  } else {
-    console.log('no exist - watch');
-  }  
+
+//Use chokidar from top of page!
+ipcMain.on('watch-file', (event) => {
+  // const pathString = path.join(specifiedDriveLetter + '\\waterjetData\\' + fileName + '.json');
+
+  // if (fs.existsSync(path.join(specifiedDriveLetter + '\\waterjetData\\'))) {
+  //   fs.watch(pathString, (eventType, filename) => {
+  //     if (filename) {
+  //       event.sender.send('file-changed', filename)
+  //     }
+  //   });
+  // } else {
+  //   console.log('no exist - watch');
+  // }
+  // One-liner for current directory
+
+  ipcRenderer.send("test", "test value")
+  
+  //event.sender.send('pending-order-changed');
+  console.log('moved');
 });
 
 ipcMain.on('open-file-in-application', (event, projectPath, specifiedDriveLetter) => {
@@ -254,14 +270,20 @@ ipcMain.on('database-interaction', (event, interaction, intendedQuery, projectDa
         connection.query(intendedQuery, (err, data) => {
           if (err) throw(err)
           console.log(data);
-
-          event.sender.send('database-interaction-response', data);
+          
+          if(data.serverStatus == 2 && data.warningStatus == 0) {
+            console.log(intendedQuery);
+            event.sender.send('database-interaction-response', 'success!');
+          } else {
+            event.sender.send('database-interaction-response', data);
+          }
         });
       }
 
     // Close the connection
     connection.end(function(){
         // The connection has been closed
+        console.log('db connection closed');
     });
 
   } catch (err) {
