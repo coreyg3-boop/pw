@@ -4,6 +4,137 @@
     <meta charset="UTF-8" />
     <title>Project Viewer - All Projects</title>
     <link rel="stylesheet" href="../../css/globals.css" />
+    <script src="../../js/Sortable.js"></script>
+    <style>
+      #getData {
+          width: 250px;
+          height: 200px;
+          padding: 10px;
+          border: 1px solid #4f4d4d;
+      }
+      .project-table-row {
+        width: 500px;
+        height: 50px;
+      }
+      .project-table-row:nth-of-type(1) {
+        background: red;
+      }
+      .project-table-row:nth-of-type(2) {
+        background: yellow;
+      }
+      .project-table-row:nth-of-type(3) {
+        background: blue;
+      }
+      .dropbox {
+          width: 350px;
+          height: 40px;
+          padding: 15px;
+          border: 1px solid #292828;
+      }
+ 
+      h1 {
+          color: green;
+      }
+      .project-group {
+        grid-area: form;
+      }
+      .project-list-item {
+        display: grid;
+        grid-template-columns: 0.125fr repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1.5fr)) 0.5fr 0.125fr 0.5fr 0.5fr;
+        grid-template-areas:
+          'anchor customer project dueDate priority status details'
+          'detailsPane detailsPane detailsPane detailsPane detailsPane detailsPane detailsPane';
+        height: 3em;
+        font-size: 1.5em;
+        line-height:1;
+        margin:0.1em 0;
+        background-color: #4f4d4d;
+        border: 1px solid #000;
+        justify-items: start;
+        align-items: center;
+        transition: all 0.15s;
+      }
+
+      .project-list-item .customer {
+        grid-area: customer;
+        padding-left:0.5em
+      }
+      .project-list-item .row-handle {
+        grid-area: anchor;
+        background: #000046;  /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #550202, #1f1f1f);  /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #550202, #1f1f1f); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        align-self:center;
+        justify-self: center;
+        height: 3em;
+        line-height: 3em;
+        width:100%;
+        cursor: grab;
+      }
+      .project-list-item .details {
+        grid-area: details;
+        font-size: 0.75em;
+        text-align: center;
+        padding-left: 1em;
+        cursor: pointer;
+      }
+      .project-list-item .priority {
+        grid-area: priority;
+        background-color: green;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+      }
+      .project-list-item .status {
+        grid-area: status;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+      }
+      .project-list-item .status:before {
+        content: '';
+        width: 30px;
+        height: 30px;
+        border-radius: 15px;
+        background-color: aqua;
+      }
+      .grid-container {
+        margin-left: 1em;
+        margin-top: 1em;
+      }
+      .project-list-item > .details-pane {
+        grid-area: detailsPane;
+        height: 0;
+        opacity: 0;
+        transition: all 0.25s;
+      }
+      .project-list-item.expanded {
+        height: 10em;
+        transition: all 0.25s;
+      }
+      .project-list-item.expanded > .details-pane {
+        display: block;
+        opacity: 1;
+        height: 7em;
+        transition: all 0.25s;
+      }
+
+    </style>
+    <script>
+      function droppoint(event) {
+          var data = event.dataTransfer.getData("Text");
+          event.target.appendChild(document.getElementById(data));
+          event.preventDefault();
+      }
+ 
+      function allowDropOption(event) {
+          event.preventDefault();
+      }
+ 
+      function dragpoint(event) {
+          event.dataTransfer.setData("Text", event.target.id);
+      }
+    </script>
   </head>
   <body>
     <main>
@@ -19,13 +150,79 @@
       <section class="content">
         <div class="page-heading">All Projects</div>
         <div class="grid-container">
-          <div id="projects"></div>
-
-          <div class="file-preview">
-            <p class="file-preview-heading">...</p>
-            <div id="svg"></div>
-            <div id="svg-converted"></div>
-            <div class="space-buffer"></div>
+          <div id="sortableProjectsList" class="project-group">
+            <div class="project-list-item">
+              <span class="row-handle"></span>
+              <div class="customer">
+                Rivian
+              </div>
+              <div class="project">
+                Strut Hooks
+              </div>
+              <div class="due-date">
+                Jan 01, 2025
+              </div>
+              <div class="priority">
+                <p>Priority</p>
+              </div>
+              <div class="status">
+                <p>Pending</p>
+              </div>
+              <div class="details">
+                <p>Expand Details</p>
+              </div>
+              <div class="details-pane">
+                Details Here!
+              </div>
+            </div>
+            <div class="project-list-item">
+              <span class="row-handle"></span>
+              <div class="customer">
+                Ferrero
+              </div>
+              <div class="project">
+                Candy Wrapper
+              </div>
+              <div class="due-date">
+                Jan 01, 2025
+              </div>
+              <div class="priority">
+                <p>Priority</p>
+              </div>
+              <div class="status">
+                <p>Pending</p>
+              </div>
+              <div class="details">
+                <p>Expand Details</p>
+              </div>
+              <div class="details-pane">
+                Details Here!
+              </div>
+            </div>
+            <div class="project-list-item">
+              <span class="row-handle"></span>
+              <div class="customer">
+                Rivian
+              </div>
+              <div class="project">
+                Strut Hooks and Things
+              </div>
+              <div class="due-date">
+                Jan 01, 2025
+              </div>
+              <div class="priority">
+                <p>Priority</p>
+              </div>
+              <div class="status">
+                <p>Pending</p>
+              </div>
+              <div class="details">
+                <p>Expand Details</p>
+              </div>
+              <div class="details-pane">
+                Details Here!
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -39,6 +236,23 @@
 
       pageUtils.menuNavigation();
       pageUtils.pageChangeFade();
+
+      // Simple list
+//Sortable.create(simpleList, { /* options */ });
+
+      // List with handle
+      Sortable.create(sortableProjectsList, {
+        handle: '.row-handle',
+        animation: 150
+      });
+
+      const expandDetails = document.querySelectorAll('.details p');
+      expandDetails.forEach((item, index) => {
+        item.addEventListener(('click'), (e) => {
+          const parentCard = e.target.parentElement.parentElement;
+          parentCard.classList.toggle('expanded');
+        })
+      })
 
       //window.api.dbInteraction('connect');
 

@@ -148,8 +148,8 @@ body> main section.content.fade-out {
 }
 .card .status {
     position: absolute;
-    top: 10px;
-    right: 20px;
+    bottom: 30px;
+    right: 10px;
 }
 
 .card button.button {

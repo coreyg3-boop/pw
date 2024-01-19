@@ -80,12 +80,23 @@
                 <input type="file" id="files" name="files" multiple value=""/>
               </div>
 
-          
+              <div class="priority-input input-block">
+                <div class="set-priority">
+                  <label for="priority">Priority</label>
+                  <input id="priority" name="priority" required value="" list="" placeholder="Priority" autocomplete="off" role="combobox" />
+                  <datalist id="priority-list" role="listbox">
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                    <option value="Rush">Rush</option>
+                  </datalist>
+                </div>
+              </div>        
 
-                <button class="review-project">Review Project</button>
+              <button class="review-project">Review Project</button>
 
-                <button class="submit-project hidden">Submit Project</button>
-              </div>
+              <button class="submit-project hidden">Submit Project</button>
+            </div>
           </form>
             
           <div class="file-preview">
@@ -245,6 +256,8 @@
                     })()
                   }</p>
               </div>
+              <div class="modal-content-row-label">Priority</div>
+              <div class="modal-content-row-value">${projectData['priority']}</div>
             </div>
             <div class="modal-footer">
               <button class="modal-submit">Submit Project</button>
@@ -282,6 +295,10 @@
             projectData[input.name] = input.value;
           }
 
+          if (input.name="priority") {
+            console.log(input.value);
+          }
+
           if (input.validity.valid) {
             validCount++;
           } else {
@@ -307,6 +324,7 @@
         projectData['comments'] = textareaValue;
         projectData['cut_time'] = 0;
         projectData['labor_time'] = 0;
+        projectData['pending_ranking'] = 0;
         projectData['date'] = dateString + ' @ ' + timeString;
         projectData['procedures'] = 'blank';
 

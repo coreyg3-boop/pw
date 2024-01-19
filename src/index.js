@@ -211,8 +211,6 @@ ipcMain.on('watch-file', (event) => {
   //   console.log('no exist - watch');
   // }
   // One-liner for current directory
-
-  ipcRenderer.send("test", "test value")
   
   //event.sender.send('pending-order-changed');
   console.log('moved');

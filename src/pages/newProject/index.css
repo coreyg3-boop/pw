@@ -294,6 +294,12 @@ datalist#unit-list {
     left: 182px;
 }
 
+datalist#priority-list {
+    width: 443px;
+    top: 659px;
+    left: 63px;
+}
+
 option {
 background-color: #414141;
 padding: 8px;
@@ -305,6 +311,23 @@ cursor: pointer;
 
 option:hover, .active {
 background-color: #330909;
+}
+
+datalist#priority-list option:first-of-type {
+    background-color: #73cb73;
+    color: #000;
+}
+datalist#priority-list option:nth-of-type(2) {
+    background-color: #dac346;
+    color: #000;
+}
+datalist#priority-list option:nth-of-type(3) {
+    background-color: #dd8842;
+    color: #000;
+}
+datalist#priority-list option:last-of-type {
+    background-color: #a11212;
+    color: #000;
 }
 
 svg {
@@ -473,5 +496,9 @@ button.view-in-program {
     margin: 0 auto;
     display: block;
     margin-bottom: 20px;
+    margin-top: 10px;
+}
+
+.priority-input {
     margin-top: 10px;
 }

@@ -170,6 +170,17 @@ const makeCard = (project) => {
   const cardContent = `<div class="card-content">
                   <p class="client">${project.client_name}</p>
                   <p class="project">${project.project_name}</p>
+                  <div class="ranking">${
+                    (function() {
+                      if(status == 'pending') {                
+                        const projectRanking = '<p class="project-ranking" data-ranking="' + project.pending_ranking + '"><span class="rank-increase">^</span>&nbsp;&nbsp;&nbsp;<span class="rank-decrease">v</span></p><br/>'
+                        return projectRanking;
+                      } else {
+                        console.log('projectRanking')
+                      }
+                    })()
+                  }
+                  </div>
                   <p class="status">${project.status}</p>
                   <p class="details-button">Show Details</p>
                   <div class="details-panel">
