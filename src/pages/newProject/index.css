@@ -314,7 +314,7 @@ background-color: #330909;
 }
 
 datalist#priority-list option:first-of-type {
-    background-color: #73cb73;
+    background-color: lightgoldenrodyellow;
     color: #000;
 }
 datalist#priority-list option:nth-of-type(2) {

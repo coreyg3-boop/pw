@@ -26,7 +26,8 @@ const populatePageWithSessionStorage = (dataName) => {
     cardList.setAttribute('id', cardListId);
 
     for(let each in JSONprojects) {
-        const card = pageUtils.makeCard(JSONprojects[each]);
+        // const card = pageUtils.makeCard(JSONprojects[each]);
+        const card = pageUtils.makeTableCard(JSONprojects[each]);
 
         cardList.appendChild(card);
     }

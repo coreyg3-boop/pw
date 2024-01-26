@@ -12,7 +12,13 @@ const dbInteractionCall = (task, status, project) => {
     const dateEntry = '"' + dateString + " @ " + timeString + '"';
     
     const getProjectList = (status) => {
-        intendedQuery = 'SELECT * from `projects` WHERE `status` = ' + "'" + status + "'";
+        console.log(typeof(status))
+        console.log(status)
+        if(typeof(status) == 'Array' || typeof(status) == 'object') {
+            intendedQuery = 'SELECT * from `projects` WHERE `status` = ' + "'" + status[0] + "'" + ' OR `status` = ' + "'" + status[1] + "'";
+        } else {
+            intendedQuery = 'SELECT * from `projects` WHERE `status` = ' + "'" + status + "'";
+        }
         projectData = 'got from db utils!!!'
     };
 
@@ -49,7 +55,7 @@ const dbInteractionCall = (task, status, project) => {
         }
 
         if (newStatus == 'completed') {
-            intendedQuery = "UPDATE `projects` SET `status` = '" + newStatus + "', `cut_time` = '" + project['cut_time'] + "' WHERE `projects`.`id` = " + JSONproject.id;
+            intendedQuery = "UPDATE `projects` SET `status` = '" + newStatus + "', `cut_time` = '" + project['cut_time'] + "', `labor_time` = '" + project['labor_time'] + "' WHERE `projects`.`id` = " + JSONproject.id;
         } else {
             intendedQuery = "UPDATE `projects` SET `status` = '" + newStatus + "' WHERE `projects`.`id` = " + JSONproject.id;
         }

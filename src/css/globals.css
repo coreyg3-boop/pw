@@ -3,6 +3,22 @@ html {
     background-image: linear-gradient(315deg, #000000 0%, #414141 74%);
 }
 
+@font-face {
+    font-family: 'Roboto';
+    src:
+        url('../fonts/Roboto-Regular.ttf') format('ttf');
+}
+
+@font-face {
+    font-family: 'Roboto-Thin';
+    src:
+        url('../fonts/Roboto-Thin.ttf') format('ttf');
+}
+    
+body {
+    font-family: 'Roboto', Fallback, sans-serif;
+}
+
 body > main nav {
     position: fixed;
     z-index: 1;
@@ -163,7 +179,8 @@ body> main section.content.fade-out {
 }
 
 body {
-    overflow: hidden;
+    /* overflow: hidden; */
+    overflow-x: hidden;
 }
 
 body > main section.content {
@@ -172,6 +189,11 @@ body > main section.content {
     background-color: #000000;
     background-image: linear-gradient(315deg, #000000 0%, #414141 74%);
     overflow: hidden;
+}
+
+body > main#currentProjects section.content {
+    min-height: 100%;
+    overflow-y: scroll;
 }
 
 .page-heading {
@@ -200,6 +222,23 @@ body > main section.content {
         "form preview";
     overflow: hidden;
     transition: all 0.25s ease-in-out;
+}
+
+.grid-container-project-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 0.25fr 0.065fr 1fr;
+    gap: 10px 10px;
+    grid-template-areas:
+        "newProject"
+        "key"
+        "form";
+    overflow: hidden;
+    transition: all 0.25s ease-in-out;
+    width: 70%;
+    position: absolute;
+    left: 3em;
+    top: 7em;
 }
 
 .grid-container:has(div.file-preview.has-elements) {

@@ -2,53 +2,607 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Project Viewer - Archived Projects</title>
+    <title>Project Viewer - Current Projects</title>
     <link rel="stylesheet" href="../../css/globals.css" />
+    <script src="../../js/Sortable.js"></script>
+    <style>
+      #getData {
+          width: 250px;
+          height: 200px;
+          padding: 10px;
+          border: 1px solid #4f4d4d;
+      }
+      .project-table-row {
+        width: 500px;
+        height: 50px;
+      }
+      .project-table-row:nth-of-type(1) {
+        background: red;
+      }
+      .project-table-row:nth-of-type(2) {
+        background: yellow;
+      }
+      .project-table-row:nth-of-type(3) {
+        background: blue;
+      }
+      .dropbox {
+          width: 350px;
+          height: 40px;
+          padding: 15px;
+          border: 1px solid #292828;
+      }
+ 
+      h1 {
+          color: green;
+      }
+      #addNewProject {
+        grid-area: newProject;
+        display: grid;
+        grid-auto-columns: minmax(0, 1fr);
+        grid-auto-flow: column;
+        grid-template-columns: 0.25fr 1fr;
+        grid-template-areas:
+          'button date';
+        align-items: center;
+        align-content: center;
+      }
+      #addNewProject .button-wrapper {
+        position: relative;
+        width: 80%;
+      }
+      #addNewProject button {
+        grid-area: button;
+        background-color: #414b5e;
+        color: #fff;
+        border: 1px solid #000;
+        border-radius: 5px;
+        padding: 0.5em 1em;
+        font-size: 1.5em;
+        font-family: 'Roboto', sans-serif;
+        cursor: pointer;
+        box-shadow: 5px 5px 5px rgba(0,0,0,0.25);
+        transition: all 0.25s;
+      }
+      #addNewProject .button-wrapper button:before {
+        background-color: transparent;
+        position: absolute;
+        content: '';
+        height: 100%;
+        width: 0;
+        left: 0;
+        top: 0;
+        opacity:0.1;
+        transition: all 0.25s;
+      }
+      #addNewProject .button-wrapper button:hover {
+        box-shadow: 3px 3px 3px rgba(0,0,0,0.5);
+        transition: all 0.25s;
+      }
+      #addNewProject .button-wrapper button:hover:before {
+        width: 100%;
+        background: transparent;
+        border-radius: 10px;
+        background: linear-gradient(90deg, rgba(2,0,36,0) 0%, rgba(255,255,255,1) 100%);
+        transition: all 0.25s;
+      }
+      #addNewProject .date-time-today {
+        grid-area: date;
+        text-align: right;
+        padding-right: 1em;
+        align-self: center
+      }
+      #projectListKey {
+        grid-area: key;
+      }
+      .project-group {
+        grid-area: form;
+      }
+      .project-list-item-key {
+        display: grid;
+        grid-auto-columns: minmax(0, 1.5fr);
+        grid-auto-flow: column;
+        grid-template-columns: 0.125fr minmax(0, 1fr) minmax(0, 1.5fr) repeat(2, minmax(0, 0.75fr)) minmax(0, 0.3fr) minmax(0, 0.75fr) 0.125fr;
+        grid-template-areas:
+          'customer project processes dueDate priority status details';
+        /* height: 3em; */
+        line-height:1;
+        margin:0.1em 0;
+        border-bottom: 2px solid #000;
+        justify-items: start;
+        align-items: center;
+        transition: all 0.15s;
+        color: #fff;
+        font-family: 'Roboto', sans-serif;
+      }
+      .project-list-item-key div {
+        padding: 0 0.75em;
+        border-width: 1px;
+        border-style: solid;
+        border-image: linear-gradient( #4f4d4d, #4f4d4d, #000000, #000000, #4f4d4d, #4f4d4d) 10;
+        border-top: none;
+        border-bottom: none;
+        border-right: none;
+        font-size: 0.9em;
+      }
+      .project-list-item-key div:nth-of-type(2) {
+        border: none;
+      }
+
+      .project-list-item {
+        display: grid;
+        grid-auto-columns: minmax(0, 1.5fr);
+        grid-auto-flow: column;
+        grid-template-columns: 0.125fr minmax(0, 1fr) minmax(0, 1.5fr) repeat(2, minmax(0, 0.75fr)) minmax(0, 0.3fr) minmax(0, 0.75fr) 0.125fr;
+        /* grid-template-rows: 1fr 0.5fr; */
+        grid-template-areas:
+          'anchor customer project processes dueDate priority status details'
+          'detailsPane detailsPane detailsPane detailsPane detailsPane detailsPane detailsPane detailsPane';
+        /* height: 3em; */
+        font-size: 18px;
+        line-height:1;
+        margin:0.1em 0;
+        background-color: #4f4d4d;
+        border: 1px solid #000;
+        justify-items: start;
+        align-items: center;
+        transition: all 0.15s;
+        color: #fff;
+        font-family: 'Roboto', 'sans-serif';
+        border-radius: 5px;
+      }
+      .project-list-item::after {
+        content: 'details';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #000;
+        opacity: 0.25;
+        top: 0;
+        right: 0;
+        z-index: -1;
+        border-radius: 5px;
+      }
+      /* .project-list-item .customer {
+        grid-area: customer;
+        padding-left:0.5em;
+        align-self: center;
+        line-height: 1;
+        padding-right: 0.5em;
+        border-right:1px solid rgba(0,0,0,0.25);
+        width: calc(100% - 1em);
+      }
+      .project-list-item .project {
+        grid-area: project;
+        padding-left:0.5em;
+        align-self: center;
+        line-height: 1;
+        padding-right: 0.5em;
+        border-right:1px solid rgba(0,0,0,0.25);
+        width: calc(100% - 1em);
+      }
+      .project-list-item .processes {
+        grid-area: processes;
+        text-align: center;
+        font-size: 18px;
+        padding-left: 0.5em;
+        padding-right: 0.5em;
+        border-right:1px solid rgba(0,0,0,0.25);
+        width: calc(100% - 1em);
+      } */
+      .project-list-item .row-handle {
+        grid-area: anchor;
+        background: #000046;  /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #550202, #1f1f1f);  /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #550202, #1f1f1f); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        align-self:center;
+        justify-self: center;
+        /* height: 3em; */
+        line-height: 3em;
+        width:100%;
+        cursor: grab;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+      }
+      /* .project-list-item .details {
+        grid-area: details;
+        font-size: 0.75em;
+        text-align: center;
+        padding-left: 1em;
+        cursor: pointer;
+      }
+      .project-list-item .priority {
+        grid-area: priority;
+        background-color: green;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+      } */
+      .project-list-item .priority {
+        grid-area: priority;
+        color: black;
+      }
+      .project-list-item .priority.low {
+        background-color: lightgreen;
+      }
+      .project-list-item .priority.med {
+        background-color: lightgoldenrodyellow;
+      }
+      .project-list-item .priority.high {
+        background-color: lightsalmon;
+      }
+      .project-list-item .priority.normal {
+        background-color: lightgoldenrodyellow;
+      }
+      .project-list-item .priority.rush {
+        background-color: red;
+      }
+      .project-list-item .status p {
+        padding-left: 5px;
+      } 
+      .project-list-item .status:before {
+        content: '';
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        border: 2px solid #000;
+      }
+      .project-list-item .status.pending:before {
+        content: '';
+        background-color: #add8e6;
+        box-shadow: -1px -1px 3px #617880 inset;
+      }
+      .project-list-item .status.inProgress:before {
+        content: '';
+        background-color: #427dc0;
+        box-shadow: -1px -1px 3px #104679 inset;
+      }
+      .project-list-item .status.completed:before {
+        content: '';
+        background-color: #0528f1;
+        box-shadow: -1px -1px 3px #092250 inset;
+      }
+      .project-list-item .status.on-hold:before {
+        content: '';
+        background-color: rebeccapurple;
+        box-shadow: -1px -1px 3px #3e1f5d inset
+      }
+      .project-list-item .status.archived:before {
+        content: '';
+        background-color: goldenrod;
+        box-shadow: -1px -1px 3px #243923 inset;
+      }
+      .grid-container {
+        margin-left: 1em;
+        margin-top: 1em;
+      }
+      .project-list-item .details {
+        font-size: 15px;
+        cursor: pointer;
+        position: relative;
+        z-index: 50;
+      }
+      .project-list-item > .details-pane {
+        grid-area: detailsPane;
+        height: 0;
+        opacity: 0;
+        z-index: 1;
+        display: block;
+        background-color: #1f1f1f;
+        grid-auto-columns: minmax(0, 1.5fr);
+        grid-auto-flow: column;
+        grid-template-columns: repeat(5, minmax(0, 1.5fr));
+        grid-template-rows: 1fr 1fr;
+        grid-template-areas:
+          "comments cutTime createdDate timeInputs timeInputs"
+          "procedures quantity material timeInputs timeInputs";
+          /* "comments cutTime createdDate fileNames files projectID"
+          "laborTime pendingRank procedures quantity material uniqueID"; */
+        /* height: 3em; */
+        font-size: 15px;
+
+        /* transition: all 0.25s; */
+      }
+      .project-list-item.expanded {
+        /* border-width: 1px;
+        border-style: solid;
+        border-image: linear-gradient( #f32828, #f32828) 2; */
+        border: 2px solid rgba(9,9,121,1);
+        background: steelblue;
+      }
+      .project-list-item.expanded > .details-pane {
+        opacity: 1;
+        display: grid;
+        height: 25em;
+        background: rgb(2,0,36);
+        background: linear-gradient(9deg, rgba(2,0,36,1) 0%, rgba(70,130,180,1) 95%, rgba(70,130,180,1) 100%); 
+        z-index: 1;
+      }
+      .detail-pane div.details-comments {
+        grid-area: comments;
+      }
+      .details-pane div.details-cut-time {
+        grid-area: cutTime;
+      }
+      .details-pane div.details-creation-date {
+        grid-area: createdDate;
+      }
+      .details-pane div.details-file-names {
+        grid-area: fileNames;
+      }
+      .details-pane div.details-files {
+        grid-area: files;
+      }
+      .details-pane div.details-projectID {
+        grid-area: projectID;
+      }
+      .details-pane div.details-time-inputs {
+        grid-area: timeInputs;
+        margin-top: 15px;        
+      }
+      .details-pane div.details-time-inputs form {
+        height: 200px;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          'cutLaborTimeInputs'
+          'statusInput';
+      }
+      .details-pane div.details-time-inputs form div.cut-labor-time-inputs {
+        grid-area: cutLaborTimeInputs;
+        display: grid;
+        grid-template-areas:
+          'cutTimeInput laborTimeInput';
+      }
+      .details-pane div.details-time-inputs div.cut-labor-time-inputs div.cut-time-input {
+        grid-area: cutTimeInput;
+        display: block;
+      }
+      .details-pane div.details-time-inputs  div.cut-labor-time-inputs div.labor-time-input {
+        grid-area: laborTimeInput;
+        display: block;
+      }
+      .details-pane div.details-time-inputs  div.cut-labor-time-inputs div.labor-time-input label,
+      .details-pane div.details-time-inputs div.cut-labor-time-inputs div.cut-time-input label {
+        display: block;
+      }
+
+      .error {
+        animation: 2s flashError infinite;
+      }
+
+      @keyframes flashError {
+        0% {
+          background-color: #ff2e2e;
+          /* border:1px solid #ff2e2e; */
+        }
+        50% {
+          background-color: #ffb0b0;
+          /* border:1px solid #ffb8b8; */
+        }
+        100% {
+          background-color: #ff2e2e;
+          /* border:1px solid #ff2e2e; */
+        }
+      }
+
+      .details-pane div.details-time-inputs div.status-input {
+        grid-area: statusInput;
+      }
+      .details-pane div.details-labor-time {
+        grid-area: laborTime;
+      }
+      .details-pane div.details-pending-rank {
+        grid-area: pendingRank;
+      }
+      .details-pane div.details-procedures {
+        grid-area: procedures;
+
+      }
+      .details-pane div.details-quantity {
+        grid-area: quantity;
+
+      }
+      .details-pane div.details-material {
+        grid-area: material;
+
+      }
+      .details-pane div.details-uniqueID {
+        grid-area: uniqueID;
+        
+      }
+      .project-list-item div.details-pane div {
+        display: inline-block;
+      }
+      .project-list-item div {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-items: center;
+        justify-content: start;
+        padding: 0 0.5em;
+        border-width: 1px;
+        border-style: solid;
+        border-image: linear-gradient( #4f4d4d, #4f4d4d, #000000, #000000, #4f4d4d, #4f4d4d) 10;
+        border-top: none;
+        border-bottom: none;
+        border-right: none;
+        width: calc(100% - 1em);
+        font-family: 'Roboto-Thin', sans-serif;
+      }
+      .project-list-item div p {
+        font-family: 'Roboto-Thin', sans-serif;
+      }
+      .project-list-item div:first-of-type {
+        padding:0;
+        border-left: none;
+      }
+      .project-list-item div:nth-of-type(2) {
+        border-left: none;
+      }
+      .date-time-today {
+        color: #fff;
+      }
+      .date-time-today .day {
+        font-size: 2.25em;
+      }
+      .date-time-today .date {
+        font-size: 1em;
+        margin-bottom: 0.5em;
+      }
+      .date-time-today .time {
+        font-size: 1.25em;
+      }
+
+    </style>
+    <script>
+      function droppoint(event) {
+          var data = event.dataTransfer.getData("Text");
+          event.target.appendChild(document.getElementById(data));
+          event.preventDefault();
+      }
+ 
+      function allowDropOption(event) {
+          event.preventDefault();
+      }
+ 
+      function dragpoint(event) {
+          event.dataTransfer.setData("Text", event.target.id);
+      }
+    </script>
   </head>
   <body>
-    <main>
+    <main id="currentProjects">
       <nav id="nav-menu">
         <button class="goToPage menu-item" data-href="../home/index.html">Home</button>
         <button class="goToPage menu-item" data-href="../newProject/index.html">New Project</button>
-        <button class="goToPage menu-item" data-href="../pending/index.html">Pending</button>
-        <button class="goToPage menu-item" data-href="../inProgress/index.html">In Progress</button>
         <button class="goToPage menu-item" data-href="../completed/index.html">Completed</button>
         <button class="goToPage menu-item active" data-href="../archived/index.html">Archived</button>
         <button class="goToPage menu-item" data-href="../settings/index.html">Settings</button>
       </nav>
       <section class="content">
-        <div class="page-heading">Archived Projects</div>
-        <div class="grid-container">
-          <div id="projects"></div>
-
-          <div class="file-preview">
-            <p class="file-preview-heading">...</p>
+        <div class="page-heading">Current Projects</div>
+        <div class="grid-container-project-list">
+            <div id="addNewProject">
+                <div class="button-wrapper"><button class="goToPage" data-href="../newProject/index.html">Add New Project</button></div>
+                <div class="date-time-today">
+                  <div class="day"></div>
+                  <div class="date"></div>
+                  <!-- <div class="time"></div> -->
+                </div>
+              </div>
+          <div id="projectListKey">
+            <div class="project-list-item-key">
+              <div><span></span></div>
+              <div>
+                <p>Customer</p>
+              </div>
+              <div>
+                <p>Project</p>
+              </div>
+              <div>
+                <p>Processes</p>
+              </div>
+              <div >
+                <p>Due Date</p>
+              </div>
+              <div>
+                <p>Priority</p>
+              </div>
+              <div>
+                <p>Status</p>
+              </div>
+              <div>
+                <p>Details</p>
+              </div>
+            </div>
+          </div>
+          <div id="sortableProjectsList" class="project-group"></div>
+          <!-- <div class="file-preview">
+            <p class="file-preview-heading">Selected Files</p>
             <div id="svg"></div>
             <div id="svg-converted"></div>
             <div class="space-buffer"></div>
-          </div>
+          </div> -->
         </div>
       </section>
+
     </main>
     <script type="module">
 
-      //import { getDBFile, writeToFile } from '../../js/api.js';
-      import * as fileHandler from '../../js/fileHandler.js'
+      import { getDBFile, writeToFile } from '../../js/api.js';
       import * as pageUtils from '../../js/utils.js';
       import * as dbUtils from '../../js/db-utils.js';
+      import * as fileHandler from '../../js/fileHandler.js';
+
+      const dateTimeToday = document.querySelector('.date-time-today');
+      const todaysDate = new Date();
+      const day = todaysDate.toLocaleDateString('en-EN', { weekday: 'long' });
+      const date = todaysDate.toLocaleDateString('en-EN', { year: 'numeric', month: 'long', day: 'numeric' });
+      
+      //const currentTime = todaysDate.toLocaleTimeString();
+      dateTimeToday.children[0].innerHTML = day;
+      dateTimeToday.children[1].innerHTML = date;
+      // dateTimeToday.children[2].innerHTML = currentTime;
+
+      // setInterval(() => {
+      //   const todaysDate = new Date();
+      //   const day = todaysDate.toLocaleDateString('en-EN', { weekday: 'long' });
+      //   const date = todaysDate.toLocaleDateString('en-EN', { year: 'numeric', month: 'long', day: 'numeric' });
+      //   const currentTime = todaysDate.toLocaleTimeString();
+      //   dateTimeToday.children[0].innerHTML = day;
+      //   dateTimeToday.children[1].innerHTML = date;
+      //   // dateTimeToday.children[2].innerHTML = currentTime;
+      // }, 1000);
 
       pageUtils.menuNavigation();
       pageUtils.pageChangeFade();
 
+      // Simple list
+//Sortable.create(simpleList, { /* options */ });
+
+      // List with handle
+      Sortable.create(sortableProjectsList, {
+        handle: '.row-handle',
+        animation: 150
+      });
+
+      const expandDetails = document.querySelectorAll('.details p');
+      expandDetails.forEach((item, index) => {
+        item.addEventListener(('click'), (e) => {
+          const parentCard = e.target.parentElement.parentElement;
+          parentCard.classList.toggle('expanded');
+        })
+      });
+
+      const moveRushToTop = () => {
+        const projectList = document.querySelector('#sortableProjectsList').children;
+        const sortableProjectList = document.querySelector('#sortableProjectsList');
+        const projectListArr = [...projectList];
+
+        projectListArr.forEach((projectDiv) => {
+          const projectClassList = projectDiv.querySelector('.priority');
+
+          if (projectClassList.classList.contains('rush')) {
+            sortableProjectList.insertBefore(projectDiv, projectList[0]);
+          }
+        })
+      }
+
       const getPageProjects = () => {
-        const projectList = document.querySelector('#projects');
+        const projectList = document.querySelector('#sortableProjectsList');
         dbUtils.dbInteractionCall('get', 'archived', 'list');
 
         const addToPage = () => {
           try {
             setTimeout(() => {
+              // const cardList = fileHandler.populatePageWithSessionStorage('pending');
               const cardList = fileHandler.populatePageWithSessionStorage('archived');
-              projectList.appendChild(cardList);
+              const cards = cardList.querySelectorAll('.project-list-item');
+              cards.forEach((card) => {
+                projectList.appendChild(card);
+              })
+              moveRushToTop();
+              // projectList.appendChild(cardList);
             }, 100);
           } 
           catch (e) {
@@ -59,6 +613,35 @@
       }
 
       getPageProjects();
+
+      //window.api.dbInteraction('connect');
+
+      // window.addEventListener('load', (ev) => {
+      //   console.log('document loaded');
+      //   const fileData = window.api.getFile('clients');
+      //   fileDataP.innerHTML = fileData;
+      // });
+
+        //dbUtils.dbInteractionCall();
+
+    //   getFile.addEventListener('click', () => {
+    //     getDBFile('clients');
+    //   });
+
+    //   theForm.addEventListener('submit', (e) => {
+    //     e.preventDefault();
+    //     const name = document.querySelector('#name').value;
+    //     const age = document.querySelector('#age').value;
+    //     const data = { name, age };
+    //     writeToFile(JSON.stringify(data));
+    //     console.log('data written to file');
+    //   });
+
+    //   window.api.onFileResponse((data) => {
+    //     console.log(data); // prints the content of data.json
+    //     //fileDataP.innerHTML = data;
+    //     fileDataP.innerHTML = data
+    // });
 
     </script>
   </body>

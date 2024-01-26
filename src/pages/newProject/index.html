@@ -6,6 +6,59 @@
     <link rel="stylesheet" href="../../css/globals.css" />
     <link rel="stylesheet" href="./index.css" />
     <script src="../../../node_modules/dxf/dist/dxf.js"></script>
+    <style>
+      datalist#procedure-list {
+        top: 290px;
+        width: 444px;
+      }
+      datalist div {
+        border-bottom: 1px solid rgba(255,255,255,0.125);
+        color: #fff;
+      }
+      datalist div p {
+        display: flex;
+        cursor: pointer;
+      }
+      datalist div p input {
+        display: flex;
+        box-shadow: none;
+        width: 30px;
+      }
+      .procedure-selection-badge-list {
+        display: inline-flex;
+        position: relative;
+        left: 50px;
+        max-width: 444px;
+        flex-wrap: wrap;
+      }
+      .procedure-badge {
+        display: flex;
+        align-items: center;
+        background-color: #1fabe2;
+        border-radius: 5px;
+        padding: 5px;
+        margin: 5px;
+        height: 20px;
+        box-shadow: 3px 3px 3px rgba(0,0,0,0.5)
+      }
+      .procedure-badge-label {
+        padding-right: 5px;
+        font-family: 'Roboto', sans-serif;
+      }
+      .remove-procedure-badge {
+        background-color: #4b4b4b;
+        border-radius: 50%;
+        border: none;
+        color: white;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        margin-right: 10px;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
     <main>
@@ -43,6 +96,54 @@
                   <option value="Palmgren">Palmgren</option>
                 </datalist>
               </div>
+              <hr/>
+              <div class="procedure-name-input input-block">
+                <label for="procedures">Procedures</label>
+                <input id="procedures" name="procedures" required value="" list="" placeholder="Procedures" autocomplete="off" role="combobox" />
+                <datalist id="procedure-list" role="listbox">
+                  <div>
+                    <p>
+                      <input type="checkbox" id="waterjet" name="waterjet" value="Waterjet">Waterjet
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                      <input type="checkbox" id="wireEDM" name="wireEDM" value="Wire EDM">Wire EDM
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                      <input type="checkbox" id="milling" name="milling" value="Milling">Milling
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                      <input type="checkbox" id="turning" name="turning" value="Turning">Turning
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                      <input type="checkbox" id="sinkerEDM" name="sinkerEDM" value="Sinker EDM">Sinker EDM
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                      <input type="checkbox" id="welding" name="welding" value="Welding">Welding
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                      <input type="checkbox" id="grinder" name="grinder" value="Grinder">Grinder
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                      <input type="checkbox" id="paint" name="paint" value="Paint">Paint
+                    </p>
+                  </div>
+                </datalist>
+              </div>
+              <div class="procedure-selection-badge-list"></div>
               <hr/>
               <div class="material-input input-block">
                 <label for="material">Material</label>
@@ -85,9 +186,7 @@
                   <label for="priority">Priority</label>
                   <input id="priority" name="priority" required value="" list="" placeholder="Priority" autocomplete="off" role="combobox" />
                   <datalist id="priority-list" role="listbox">
-                    <option value="Low">Low</option>
-                    <option value="Medium">Medium</option>
-                    <option value="High">High</option>
+                    <option value="Normal">Normal</option>
                     <option value="Rush">Rush</option>
                   </datalist>
                 </div>
@@ -133,6 +232,81 @@
       const filePreviewPane = svgContainer.closest('.file-preview');
       const svgConvertedContainer = document.getElementById('svg-converted');
       const fileInput = document.getElementById('files');
+      const procedureesInputField = document.getElementById('procedures');
+      const procedureSelectionMenu = document.querySelector('#procedures+datalist');
+      const procedureInputs = procedureSelectionMenu.querySelectorAll('div p input');
+      const procedureInputsContainer = procedureSelectionMenu.querySelectorAll('div p');
+      const procedureSelectionBadgeList = document.querySelector('.procedure-selection-badge-list');
+
+      procedureInputsContainer.forEach((container) => {
+        container.addEventListener('click', (e) => {
+          e.target.querySelector('input').click();
+        });
+      });
+
+      const makeProcedureBadge = (procedureName) => {
+        const procedureBadge = document.createElement('div');
+        const removeButton = document.createElement('button');
+        const procedureBadgeLabel = document.createElement('p');
+        removeButton.classList.add('remove-procedure-badge');
+        removeButton.innerHTML = 'X';
+
+        procedureBadge.appendChild(removeButton);
+
+        removeButton.addEventListener('click', (e) => {
+          if (e.target.classList.contains('remove-procedure-badge')) {
+            removeProcedureBadge(procedureBadge);
+          }
+        });
+
+        procedureBadgeLabel.classList.add('procedure-badge-label');
+        procedureBadgeLabel.innerHTML = procedureName;
+        procedureBadge.appendChild(procedureBadgeLabel);
+
+        procedureBadge.classList.add('procedure-badge');
+        
+        return procedureBadge;
+      }
+
+      const removeProcedureBadge = (procedureBadge) => {
+        const procedureBadgeLabel = procedureBadge.querySelector('.procedure-badge-label');
+        procedureInputs.forEach((input) => {
+          if (input.value == procedureBadgeLabel.innerHTML) {
+            input.checked = false;
+          }
+        });
+        procedureBadge.remove();
+        procedureInputFieldValue();
+      }
+
+      const procedureInputFieldValue = () => {
+        const procedureBadges = procedureSelectionBadgeList.querySelectorAll('.procedure-badge');
+        let procedureInputFieldValue = '';
+        procedureBadges.forEach((badge) => {
+          const procedureBadgeLabel = badge.querySelector('.procedure-badge-label');
+          procedureInputFieldValue += procedureBadgeLabel.innerHTML + ', ';
+        });
+        procedureesInputField.value = procedureInputFieldValue.slice(0, -2);
+      }
+
+      procedureInputs.forEach((input) => {
+        input.addEventListener('click', (e) => {
+          if (e.target.checked) {
+            procedureSelectionBadgeList.appendChild(makeProcedureBadge(e.target.value));
+            procedureInputFieldValue();
+          } else {
+            const procedureBadges = procedureSelectionBadgeList.querySelectorAll('.procedure-badge');
+            procedureBadges.forEach((badge) => {
+              const procedureBadgeLabel = badge.querySelector('.procedure-badge-label');
+              if (procedureBadgeLabel.innerHTML == e.target.value) {
+                removeprocedureBadge(badge);
+              }
+            });
+          }
+          procedureesInputField.focus();
+        });
+      });
+
       const filesArr = [];
 
       let currentFocus = -1;
@@ -141,7 +315,7 @@
       inputSelectCombo.forEach((input) => {
         const datalist = input.nextElementSibling;
 
-        input.addEventListener('focus', () => {
+        input.addEventListener('focus', (e) => {
           datalist.style.display = 'block';
         });
 
@@ -287,16 +461,26 @@
         let validCount = 0;
         let inputCount = 0;
         let isValid = false;
+        let procedures = [];
 
         inputs.forEach((input, index) => {
           if (input.type == 'checkbox') {
             console.log('checkbox');
+            if (input.checked) {
+              procedures.push(input.value);
+            }
+
           } else {
             projectData[input.name] = input.value;
           }
 
-          if (input.name="priority") {
+
+          console.log(input.value);
+          console.log(input.name);
+
+          if (input.name="procedure_name") {
             console.log(input.value);
+            console.log(input.name);
           }
 
           if (input.validity.valid) {
@@ -326,13 +510,15 @@
         projectData['labor_time'] = 0;
         projectData['pending_ranking'] = 0;
         projectData['date'] = dateString + ' @ ' + timeString;
-        projectData['procedures'] = 'blank';
+        projectData['procedures'] = procedures;
 
         projectData['status'] = 'pending';
 
-        projectData['uniqueID'] = (new Date().getTime()) + projectData['project_name'].replaceAll(' ', '');
+        projectData['uniqueID'] = (new Date().getTime()) + projectData['project_name'].replace(' ', '');
 
         window.localStorage.setItem('pendingProjectData', JSON.stringify(projectData));
+
+        console.log(projectData);
 
         if(isValid) {
           showReviewModal(projectData);
