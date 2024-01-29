@@ -412,6 +412,8 @@ const makeTableCard = (project) => {
       const cutInput = updatesForm.querySelector('.cut-time-input');
       const laborInput = updatesForm.querySelector('.labor-time-input');
 
+      const thisCard = updatesForm.parentElement.parentElement.parentElement.parentElement;
+
       let newStatus;
 
       const formData = new FormData(updatesForm);
@@ -445,12 +447,14 @@ const makeTableCard = (project) => {
       } else {
         dbUtils.dbInteractionCall('update', newStatus, project);
 
-        window.location.reload();
+        //window.location.reload();
       }
 
       console.log(newStatus)
       console.log(project['cut_time'])
       console.log(project['labor_time'])
+
+      moveToNewStatus(thisCard, status, project['cut_time']);
 
       //dbUtils.dbInteractionCall('update', newStatus, project);
 
@@ -541,6 +545,7 @@ const makeCard = (project) => {
       if (cutTime.value.length < 1) {
         cutTime.classList.add('invalid-error');
       } else {
+        console.log('aboutToMoveToNewStatus');
         moveToNewStatus(thisCard, status, cutTime);
         thisCard.remove();
       }

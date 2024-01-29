@@ -89,7 +89,38 @@ const dbInteractionCall = (task, status, project) => {
         } else {
             const dataString = JSON.stringify(data);
 
-            window.sessionStorage.setItem(status, dataString);
+            console.log(status)
+
+            if(typeof(status) == 'object') {
+                const pendingProjects = [];
+                const inProgressProjects = [];
+                status.forEach((item) => {
+                    const JSONProjects = JSON.parse(dataString);
+                    console.log(item)
+                    console.log(dataString)
+                    console.log(JSON.parse(dataString))
+                    for(let projectStatus in JSONProjects) {
+                        console.log(JSONProjects[projectStatus])
+                        console.log(JSONProjects[projectStatus].status)
+                        if (JSONProjects[projectStatus].status == 'pending') {
+                            pendingProjects.push(JSONProjects[projectStatus]);
+                            //window.sessionStorage.setItem(JSONProjects[projectStatus].status, JSONProjects[projectStatus]);
+                        } else if (JSONProjects[projectStatus].status == 'inProgress') {
+                            inProgressProjects.push(JSONProjects[projectStatus]);
+                            //window.sessionStorage.setItem(JSONProjects[projectStatus].status, JSONProjects[projectStatus]);
+                        }
+                    }
+                    console.log(JSON.stringify(pendingProjects))
+                    window.sessionStorage.setItem('pending', JSON.stringify(pendingProjects));
+                    window.sessionStorage.setItem('inProgress', JSON.stringify(inProgressProjects));
+                })
+            } else {
+                console.log(item)
+                console.log(dataString)
+                console.log(JSON.parse(dataString))
+                window.sessionStorage.setItem(status, dataString);
+            }
+
             return data;
         }
     })

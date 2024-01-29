@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Project Viewer - New Project</title>
+    <link rel="stylesheet" href="../../css/globals.css" />
+    <link rel="stylesheet" href="./index.css" />
+    <script src="../../../node_modules/dxf/dist/dxf.js"></script>
+    <style>
+      datalist#procedure-list {
+        top: 63px;
+        width: 500px;
+      }
+      datalist div {
+        border-bottom: 1px solid rgba(255,255,255,0.125);
+        color: #fff;
+      }
+      datalist div p {
+        display: flex;
+        cursor: pointer;
+      }
+      datalist div p input {
+        display: flex;
+        box-shadow: none;
+        width: 30px;
+      }
+      .procedure-selection-badge-list {
+        display: inline-flex;
+        position: relative;
+        left: 55px;
+        max-width: 500px;
+        flex-wrap: wrap;
+      }
+      .procedure-badge {
+        display: flex;
+        align-items: center;
+        background-color: #1fabe2;
+        border-radius: 5px;
+        padding: 5px;
+        margin: 5px;
+        height: 20px;
+        box-shadow: 3px 3px 3px rgba(0,0,0,0.5)
+      }
+      .procedure-badge-label {
+        padding-right: 5px;
+        font-family: 'Roboto', sans-serif;
+      }
+      .remove-procedure-badge {
+        background-color: #4b4b4b;
+        border-radius: 50%;
+        border: none;
+        color: white;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        margin-right: 10px;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+      }
+      .grid-container-wizard {
+        width: 750px;
+        position: relative;
+        left: 10%;
+        overflow: hidden;
+
+      }
+      .form-wizard-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: minmax(0, 1fr) 0.25fr;
+        grid-template-areas:
+        "wizard-form"
+        "wizard-nav-bottom";
+        height: 100%;
+        /* border:1px solid #1fabe2; */
+        position: relative;
+        left: 0;
+        top: 50px;
+      }
+        .wizard-nav-top {
+            grid-area: wizard-nav-top;
+            background-color: #1fabe2;
+            display: inline-flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        .wizard-nav-bottom {
+            grid-area: wizard-nav-bottom;
+            /* background-color: #1fabe2; */
+            display: inline-flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        .wizard-form {
+            grid-area: wizard-form;
+            /* background-color: #1fabe2; */
+            display: flex;
+            height: 100%;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 750px;
+            position: relative;
+            transition: all 0.5s ease 0s;
+        }
+        .wizard-one {
+            grid-area: wizard-one;
+            background-color: #1fabe2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 750px;
+        }
+        .wizard-two {
+            grid-area: wizard-two;
+            background-color: #1fabe2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 750px;
+        }
+        .wizard-navigation-item {
+            width: 100px;
+            height: 50px;
+            background-color: #1fabe2;
+            border: 1px solid #fff;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 5px;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+        }
+        .wizard-navigation-item.active {
+            background-color: #fff;
+            color: #1fabe2;
+            border: 1px solid #fff;
+        }
+        .wizard-previous.disabled {
+            background-color: #1fabe2;
+            color: #fff;
+            border: 1px solid #fff;
+            cursor: not-allowed;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        /* entire container, keeps perspective */
+.flip-container {
+	perspective: 1000px;
+}
+/* flip the pane when hovered */
+.flip-container.flip .flipper {
+	transform: rotateY(180deg);
+}
+
+.flip-container, .front, .back {
+	width: 600px;
+	height: 550px;
+}
+
+/* flip speed goes here */
+.flipper {
+	transition: 0.6s;
+	transform-style: preserve-3d;
+
+	position: relative;
+}
+
+/* hide back of pane during swap */
+.front, .back {
+	backface-visibility: hidden;
+
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+/* front pane, placed above back */
+.front {
+	z-index: 2;
+	/* for firefox 31 */
+	transform: rotateY(0deg);
+}
+
+/* back, initially hidden pane */
+.back {
+	transform: rotateY(180deg);
+}
+section.content {
+    height: 100svh;
+}
+.comments-box {
+    margin-top: 30px;
+}
+
+    </style>
+  </head>
+  <body>
+    <main>
+      <nav id="nav-menu">
+        <button class="goToPage menu-item" data-href="../home/index.html">Home</button>
+        <!-- <button class="goToPage menu-item active" data-href="../newProject/index.html">New Project</button>
+        <button class="goToPage menu-item" data-href="../pending/index.html">Pending</button>
+        <button class="goToPage menu-item" data-href="../inProgress/index.html">In Progress</button> -->
+        <button class="goToPage menu-item" data-href="../completed/index.html">Completed</button>
+        <button class="goToPage menu-item" data-href="../archived/index.html">Archived</button>
+        <button class="goToPage menu-item" data-href="../settings/index.html">Settings</button>
+      </nav>
+      <section class="content">
+        <div class="page-heading">New Project Wizard</div>
+        <div class="grid-container-wizard">
+            <div class="form-wizard-container">
+                <!-- <div class="wizard-navigation wizard-nav-top">
+                    <div class="wizard-navigation-item wizard-previous active">1</div>
+                    <div class="wizard-navigation-item wizard-next">2</div>
+                </div> -->
+                <div class="wizard-form">
+                    <div class="flip-container" ontouchstart="this.classList.toggle('hover');">
+                        <div class="flipper">
+                            <div class="front">
+                                <!-- front content -->
+                                <div class="project-name-input input-block">
+                                    <label for="project_name">Project Name</label>
+                                    <input id="project-name" name="project_name" type="text" value="" placeholder="Project Name"/>
+                                </div>
+                                <div class="client-name-input input-block">
+                                    <label for="client_name">Client Name</label>
+                                    <input id="client-name" name="client_name" value="" list="" placeholder="Client Name" autocomplete="off" role="combobox" />
+                                    <datalist id="client-list" role="listbox">
+                                        <option value="Rivian">Rivian</option>
+                                        <option value="Ferrero">Ferrero</option>
+                                        <option value="Nicor">Nicor</option>
+                                        <option value="Kleen Moto">Kleen Moto</option>
+                                        <option value="IC Flow">IC Flow</option>
+                                        <option value="Red Line">Red Line</option>
+                                        <option value="Meltdown Creative">Meltdown Creative</option>
+                                        <option value="Walk-In">Walk-In</option>
+                                        <option value="Creative Metal Works">Creative Metal Works</option>
+                                        <option value="Palmgren">Palmgren</option>
+                                    </datalist>
+                                </div>
+                                <div class="project-name-input input-block">
+                                    <label for="due_date">Due Date</label>
+                                    <input id="due_date" name="due_date" type="date" value="" placeholder="Due Date"/>
+                                </div>
+                                <div class="comments-box input-block">
+                                    <label for="comments">Comments</label>
+                                    <textarea id="comments" name="comments" type="text" value="" placeholder="Project comments..."></textarea>
+                                </div>
+                                <div class="priority-input input-block">
+                                    <div class="set-priority">
+                                      <label for="priority">Priority</label>
+                                      <input id="priority" name="priority" value="" list="" placeholder="Priority" autocomplete="off" role="combobox" />
+                                      <datalist id="priority-list" role="listbox">
+                                        <option value="Normal">Normal</option>
+                                        <option value="Rush">Rush</option>
+                                      </datalist>
+                                    </div>
+                                  </div>
+                            </div>
+                            <div class="back">
+                                <!-- back content -->
+                                <div class="procedure-name-input input-block">
+                                    <label for="procedures">Procedures</label>
+                                    <input id="procedures" name="procedures" value="" list="" placeholder="Procedures" autocomplete="off" role="combobox" />
+                                    <datalist id="procedure-list" role="listbox">
+                                      <div>
+                                        <p>
+                                          <input type="checkbox" id="waterjet" name="waterjet" value="Waterjet">Waterjet
+                                        </p>
+                                      </div>
+                                      <div>
+                                        <p>
+                                          <input type="checkbox" id="wireEDM" name="wireEDM" value="Wire EDM">Wire EDM
+                                        </p>
+                                      </div>
+                                      <div>
+                                        <p>
+                                          <input type="checkbox" id="milling" name="milling" value="Milling">Milling
+                                        </p>
+                                      </div>
+                                      <div>
+                                        <p>
+                                          <input type="checkbox" id="turning" name="turning" value="Turning">Turning
+                                        </p>
+                                      </div>
+                                      <div>
+                                        <p>
+                                          <input type="checkbox" id="sinkerEDM" name="sinkerEDM" value="Sinker EDM">Sinker EDM
+                                        </p>
+                                      </div>
+                                      <div>
+                                        <p>
+                                          <input type="checkbox" id="welding" name="welding" value="Welding">Welding
+                                        </p>
+                                      </div>
+                                      <div>
+                                        <p>
+                                          <input type="checkbox" id="grinder" name="grinder" value="Grinder">Grinder
+                                        </p>
+                                      </div>
+                                      <div>
+                                        <p>
+                                          <input type="checkbox" id="paint" name="paint" value="Paint">Paint
+                                        </p>
+                                      </div>
+                                    </datalist>
+                                  </div>
+                                  <div class="procedure-selection-badge-list"></div>
+                                  <hr/>
+                                  <div class="material-input input-block">
+                                    <label for="material">Material</label>
+                                    <input id="material" name="material" value="" list="" placeholder="Material" autocomplete="off" role="combobox" />
+                                    <datalist id="material-list" role="listbox">
+                                      <option value="Stainless Steel">Stainless Steel</option>
+                                      <option value="Delrin">Delrin</option>
+                                      <option value="Aluminum">Aluminum</option>
+                                      <option value="Aluminum 5052">Aluminum 5052</option>
+                                      <option value="Mild Steel">Mild Steel</option>
+                                      <option value="Mild Steel 4140">Mild Steel 4140</option>
+                                      <option value="Mild Steel AR400">Mild Steel (AR400)</option>
+                                      <option value="PVC Foam">PVC foam</option>
+                                      <option value="Acrylic">Acrylic</option>
+                                      <option value="neoprene rubber">Neoprene Rubber</option>
+                                    </datalist>
+                                    <input id="thickness" name="thickness" type="number" step="0.0005" max="3" min="0" value="" placeholder="Thickness"/>
+                                    <input id="unit" name="unit" value="" list="units" placeholder="Unit"/>
+                                    <datalist id="unit-list">
+                                      <option value="inch">inch</option>
+                                      <option value="mm">mm</option>
+                                      <option value="gauge">gauge</option>
+                                    </datalist>
+                                    <div class="vert-divider">   </div>
+                                    <input id="quantity" name="quantity" type="number" value="" placeholder="Quantity" />
+                                  </div>
+                    
+                                  <div class="file-input input-block" style="margin-top:20px;">
+                                    <label for="files">Files</label>
+                                    <input type="file" id="files" name="files" multiple value=""/>
+                                  </div>       
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="wizard-navigation wizard-nav-bottom">
+                    <div class="wizard-navigation-item wizard-previous  wizard-button disabled">Previous</div>
+                    <div class="wizard-navigation-item wizard-next wizard-button ">Next</div>
+                </div>
+                <button class="submit-project hidden">Submit Project</button>
+            </div>
+          <!-- <form id="page-form">
+            <div class="form-container">
+              <div class="project-name-input input-block">
+                <label for="project_name">Project Name</label>
+                <input id="project-name" name="project_name" required value="" placeholder="Project Name"/>
+              </div>
+              <div class="client-name-input input-block">
+                <label for="client_name">Client Name</label>
+                <input id="client-name" name="client_name" required value="" list="" placeholder="Client Name" autocomplete="off" role="combobox" />
+                <datalist id="client-list" role="listbox">
+                  <option value="Rivian">Rivian</option>
+                  <option value="Ferrero">Ferrero</option>
+                  <option value="Nicor">Nicor</option>
+                  <option value="Kleen Moto">Kleen Moto</option>
+                  <option value="IC Flow">IC Flow</option>
+                  <option value="Red Line">Red Line</option>
+                  <option value="Meltdown Creative">Meltdown Creative</option>
+                  <option value="Walk-In">Walk-In</option>
+                  <option value="Creative Metal Works">Creative Metal Works</option>
+                  <option value="Palmgren">Palmgren</option>
+                </datalist>
+              </div>
+              <hr/>
+              <div class="procedure-name-input input-block">
+                <label for="procedures">Procedures</label>
+                <input id="procedures" name="procedures" required value="" list="" placeholder="Procedures" autocomplete="off" role="combobox" />
+                <datalist id="procedure-list" role="listbox">
+                  <div>
+                    <p>
+                      <input type="checkbox" id="waterjet" name="waterjet" value="Waterjet">Waterjet
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                      <input type="checkbox" id="wireEDM" name="wireEDM" value="Wire EDM">Wire EDM
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                      <input type="checkbox" id="milling" name="milling" value="Milling">Milling
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                      <input type="checkbox" id="turning" name="turning" value="Turning">Turning
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                      <input type="checkbox" id="sinkerEDM" name="sinkerEDM" value="Sinker EDM">Sinker EDM
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                      <input type="checkbox" id="welding" name="welding" value="Welding">Welding
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                      <input type="checkbox" id="grinder" name="grinder" value="Grinder">Grinder
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                      <input type="checkbox" id="paint" name="paint" value="Paint">Paint
+                    </p>
+                  </div>
+                </datalist>
+              </div>
+              <div class="procedure-selection-badge-list"></div>
+              <hr/>
+              <div class="material-input input-block">
+                <label for="material">Material</label>
+                <input id="material" name="material" required value="" list="" placeholder="Material" autocomplete="off" role="combobox" />
+                <datalist id="material-list" role="listbox">
+                  <option value="Stainless Steel">Stainless Steel</option>
+                  <option value="Delrin">Delrin</option>
+                  <option value="Aluminum">Aluminum</option>
+                  <option value="Aluminum 5052">Aluminum 5052</option>
+                  <option value="Mild Steel">Mild Steel</option>
+                  <option value="Mild Steel 4140">Mild Steel 4140</option>
+                  <option value="Mild Steel AR400">Mild Steel (AR400)</option>
+                  <option value="PVC Foam">PVC foam</option>
+                  <option value="Acrylic">Acrylic</option>
+                  <option value="neoprene rubber">Neoprene Rubber</option>
+                </datalist>
+                <input id="thickness" name="thickness" type="number" step="0.0005" max="3" min="0" value="" required placeholder="Thickness"/>
+                <input id="unit" name="unit" required value="" list="units" placeholder="Unit"/>
+                <datalist id="unit-list">
+                  <option value="inch">inch</option>
+                  <option value="mm">mm</option>
+                  <option value="gauge">gauge</option>
+                </datalist>
+                <div class="vert-divider">   </div>
+                <input id="quantity" name="quantity" type="number" value="" required placeholder="Quantity" />
+              </div>
+              <hr/>
+              <div class="comments-box input-block">
+                <label for="comments">Comments</label>
+                <textarea id="comments" name="comments" type="text" value="" placeholder="Project comments..."></textarea>
+              </div>
+
+              <div class="file-input input-block" style="margin-top:20px;">
+                <label for="files">Files</label>
+                <input type="file" id="files" name="files" multiple value=""/>
+              </div>
+
+              <div class="priority-input input-block">
+                <div class="set-priority">
+                  <label for="priority">Priority</label>
+                  <input id="priority" name="priority" required value="" list="" placeholder="Priority" autocomplete="off" role="combobox" />
+                  <datalist id="priority-list" role="listbox">
+                    <option value="Normal">Normal</option>
+                    <option value="Rush">Rush</option>
+                  </datalist>
+                </div>
+              </div>        
+
+              <button class="review-project">Review Project</button>
+
+              <button class="submit-project hidden">Submit Project</button>
+            </div>
+          </form> -->
+            
+          <!-- <div class="file-preview">
+            <p class="file-preview-heading">Selected Files</p>
+            <div id="svg"></div>
+            <div id="svg-converted"></div>
+            <div class="space-buffer"></div>
+          </div> -->
+        </div>
+      </section>
+    </main>
+    <script type="module">
+
+      import { getDBFile, writeToFile } from '../../js/api.js';
+      import * as fileHandler from '../../js/fileHandler.js';
+      import * as pageUtils from '../../js/utils.js';
+      import * as dbUtils from '../../js/db-utils.js';
+      import * as dxfHandler from '../../js/dxf-handler.js';
+
+      pageUtils.menuNavigation();
+      pageUtils.pageChangeFade();
+
+      //fileHandler.getDBFileAddToLocal('pending');
+      //fileHandler.watchDBFile('pending');
+
+      const getFile = document.querySelector('.getFile');
+      const fileDataP = document.querySelector('.fileData');
+      const theForm = document.querySelector('.flipper');
+      const reviewProject = document.querySelector('.review-project');
+      const submitProject = document.querySelector('.submit-project');
+      const inputSelectCombo = document.querySelectorAll('input:has(+ datalist)');
+      // const numberOfEntities = document.getElementById('numberOfEntities');
+      const svgContainer = document.getElementById('svg');
+      //const filePreviewPane = svgContainer.closest('.file-preview');
+      const svgConvertedContainer = document.getElementById('svg-converted');
+      const fileInput = document.getElementById('files');
+      const procedureesInputField = document.getElementById('procedures');
+      const procedureSelectionMenu = document.querySelector('#procedures+datalist');
+      const procedureInputs = procedureSelectionMenu.querySelectorAll('div p input');
+      const procedureInputsContainer = procedureSelectionMenu.querySelectorAll('div p');
+      const procedureSelectionBadgeList = document.querySelector('.procedure-selection-badge-list');
+
+      const formWizardContainer = document.querySelector('.form-wizard-container');
+      const wizardForm = document.querySelector('.wizard-form');
+      const wizardOne = document.querySelector('.wizard-one');
+      const wizardTwo = document.querySelector('.wizard-two');
+      const wizardNavigation = document.querySelectorAll('.wizard-navigation');
+
+      const gatherDataForPreviewModal = () => {
+        const inputs = theForm.querySelectorAll('input');
+        const selects = theForm.querySelectorAll('select');
+        const textareaValue = theForm.querySelector('textarea').value;
+        const projectData = {};
+        let projectID;
+        const date = new Date();
+        const dateString = date.toDateString();
+        const timeString = date.toTimeString();
+        let validCount = 0;
+        let inputCount = 0;
+        //let isValid = false;
+        let isValid = true;
+        let procedures = [];
+
+        inputs.forEach((input, index) => {
+          if (input.type == 'checkbox') {
+            console.log('checkbox');
+            if (input.checked) {
+              procedures.push(input.value);
+            }
+
+          } else {
+            projectData[input.name] = input.value;
+          }
+
+
+          console.log(input.value);
+          console.log(input.name);
+
+          if (input.name="procedure_name") {
+            console.log(input.value);
+            console.log(input.name);
+          }
+
+          if (input.validity.valid) {
+            validCount++;
+          } else {
+            validCount = 0;
+          }
+
+          if (validCount == index + 1) {
+            isValid = true;
+          } else {
+            isValid = false;
+          }
+        });
+
+        selects.forEach((select) => {
+          console.log(select.value);
+          projectData[select.name] = select.value;
+        });
+
+        projectData['files'] = filesArr;
+
+        fileHandler.createOrRelocateDirectory('dump', projectData['files']);
+
+        projectData['comments'] = textareaValue;
+        projectData['cut_time'] = 0;
+        projectData['labor_time'] = 0;
+        projectData['pending_ranking'] = 0;
+        projectData['date'] = dateString + ' @ ' + timeString;
+        projectData['procedures'] = procedures;
+
+        projectData['status'] = 'pending';
+
+        console.log(projectData);
+
+        if (projectData['project_name'] == undefined) {
+            projectData['uniqueID'] = '0001';
+        } else {
+          projectData['uniqueID'] = (new Date().getTime()) + projectData['project_name'].replace(' ', '');
+        }
+
+        //projectData['uniqueID'] = (new Date().getTime()) + projectData['project_name'].replace(' ', '');
+
+        window.localStorage.setItem('pendingProjectData', JSON.stringify(projectData));
+
+        console.log(projectData);
+
+        if(isValid) {
+          showReviewModal(projectData);
+        } else {
+          console.log('Please fill out all required fields');
+        }
+
+        console.log('data written to local storage');
+      }
+
+        wizardNavigation.forEach((nav) => {
+            const flipContainer = document.querySelector(".flip-container");
+            nav.addEventListener('click', (e) => {
+                if (e.target.classList.contains('wizard-next')) {
+                    flipContainer.classList.toggle("flip")
+                    console.log('next');
+                } else if (e.target.classList.contains('wizard-previous')) {
+                    flipContainer.classList.toggle("flip")
+                    console.log('prev');
+                }
+
+                if(flipContainer.classList.contains('flip')) {
+                    document.querySelector('.wizard-next').textContent = 'Review';
+                    document.querySelector('.wizard-next').classList.add('review-project');
+                    document.querySelector('.wizard-previous').classList.remove('disabled');
+                    document.querySelector('.wizard-next').addEventListener('click', gatherDataForPreviewModal, false);
+                } else {
+                    document.querySelector('.wizard-next').textContent = 'Next';
+                    document.querySelector('.wizard-previous').classList.add('disabled');
+                    document.querySelector('.wizard-next').classList.remove('review-project');
+                    document.querySelector('.wizard-next').removeEventListener('click', gatherDataForPreviewModal, false);
+                }
+            });
+        });
+
+
+
+
+
+
+
+
+      procedureInputsContainer.forEach((container) => {
+        container.addEventListener('click', (e) => {
+          e.target.querySelector('input').click();
+        });
+      });
+
+      const makeProcedureBadge = (procedureName) => {
+        const procedureBadge = document.createElement('div');
+        const removeButton = document.createElement('button');
+        const procedureBadgeLabel = document.createElement('p');
+        removeButton.classList.add('remove-procedure-badge');
+        removeButton.innerHTML = 'X';
+
+        procedureBadge.appendChild(removeButton);
+
+        removeButton.addEventListener('click', (e) => {
+          if (e.target.classList.contains('remove-procedure-badge')) {
+            removeProcedureBadge(procedureBadge);
+          }
+        });
+
+        procedureBadgeLabel.classList.add('procedure-badge-label');
+        procedureBadgeLabel.innerHTML = procedureName;
+        procedureBadge.appendChild(procedureBadgeLabel);
+
+        procedureBadge.classList.add('procedure-badge');
+        
+        return procedureBadge;
+      }
+
+      const removeProcedureBadge = (procedureBadge) => {
+        const procedureBadgeLabel = procedureBadge.querySelector('.procedure-badge-label');
+        procedureInputs.forEach((input) => {
+          if (input.value == procedureBadgeLabel.innerHTML) {
+            input.checked = false;
+          }
+        });
+        procedureBadge.remove();
+        procedureInputFieldValue();
+      }
+
+      const procedureInputFieldValue = () => {
+        const procedureBadges = procedureSelectionBadgeList.querySelectorAll('.procedure-badge');
+        let procedureInputFieldValue = '';
+        procedureBadges.forEach((badge) => {
+          const procedureBadgeLabel = badge.querySelector('.procedure-badge-label');
+          procedureInputFieldValue += procedureBadgeLabel.innerHTML + ', ';
+        });
+        procedureesInputField.value = procedureInputFieldValue.slice(0, -2);
+
+        if (procedureInputFieldValue.indexOf('Waterjet') > -1) {
+          document.querySelector('.material-input').classList.add('waterjet');
+        }
+      }
+
+      procedureInputs.forEach((input) => {
+        input.addEventListener('click', (e) => {
+          if (e.target.checked) {
+            procedureSelectionBadgeList.appendChild(makeProcedureBadge(e.target.value));
+            procedureInputFieldValue();
+          } else {
+            const procedureBadges = procedureSelectionBadgeList.querySelectorAll('.procedure-badge');
+            procedureBadges.forEach((badge) => {
+              const procedureBadgeLabel = badge.querySelector('.procedure-badge-label');
+              if (procedureBadgeLabel.innerHTML == e.target.value) {
+                removeprocedureBadge(badge);
+              }
+            });
+          }
+          procedureesInputField.focus();
+        });
+      });
+
+      const filesArr = [];
+
+      let currentFocus = -1;
+      let overMenu = false;
+
+      inputSelectCombo.forEach((input) => {
+        const datalist = input.nextElementSibling;
+
+        input.addEventListener('focus', (e) => {
+          datalist.style.display = 'block';
+        });
+
+        for (let option of datalist.options) {
+          option.addEventListener('click', () => {
+            input.value = option.value;
+            datalist.style.display = 'none';
+            input.style.borderRadius = "5px";
+          });
+        };
+
+        datalist.addEventListener('mouseenter', (e) => {
+          overMenu = true;
+        });
+
+        datalist.addEventListener('mouseleave', (e) => {
+          overMenu = false;
+        });
+
+        input.addEventListener('blur', () => {
+          if (overMenu == false) {
+            datalist.style.display = 'none';
+            input.style.borderRadius = "5px";
+          } else {
+            console.log('over menu is true')
+          }
+        });
+
+        input.addEventListener('input', () => {
+          currentFocus = -1;
+          const text = input.value.toUpperCase();
+          for (let option of datalist.options) {
+            if (option.value.toUpperCase().indexOf(text) > -1){
+              option.style.display = "block";
+            } else {
+              option.style.display = "none";
+            }
+          };
+        });
+        
+        input.addEventListener('keydown', (e) => {
+          if(e.keyCode == 40){
+            currentFocus++
+          addActive(datalist.options);
+          }
+          else if(e.keyCode == 38){
+            currentFocus--
+          addActive(datalist.options);
+          }
+          else if(e.keyCode == 13){
+            e.preventDefault();
+                if (currentFocus > -1) {
+                  /*and simulate a click on the "active" item:*/
+                  if (datalist.options) datalist.options[currentFocus].click();
+                }
+          }
+        });
+      });
+
+      const addActive = (x) => {
+          if (!x) return false;
+          removeActive(x);
+          if (currentFocus >= x.length) currentFocus = 0;
+          if (currentFocus < 0) currentFocus = (x.length - 1);
+          x[currentFocus].classList.add("active");
+        }
+      const removeActive = (x) => {
+        for (var i = 0; i < x.length; i++) {
+          x[i].classList.remove("active");
+        }
+      }
+
+    //   theForm.addEventListener('submit', (ev) => {
+    //     ev.preventDefault();
+    //   });
+
+      const showReviewModal = (projectData) => {
+        console.log(projectData);
+        const modalBG = document.createElement('div');
+        const modal = document.createElement('div');
+        modal.classList.add('modal');
+        modalBG.classList.add('modal-bg');
+
+        modalBG.addEventListener('click', () => {
+          modalBG.remove();
+        });
+
+        const modalContent = `
+          <h2 class="modal-heading">Review Project</h2>
+          <div class="modal-content">
+              <div class="modal-content-row-label">Project Name:</div>
+              <div class="modal-content-row-value">${projectData['project_name']}</div>
+              <div class="modal-content-row-label">Client Name:</div>
+              <div class="modal-content-row-value">${projectData['client_name']}</div>
+              <div class="modal-content-row-label">Material:</div>
+              <div class="modal-content-row-value">${projectData['thickness']} ${projectData['unit']} ${projectData['material']}</div>
+              <div class="modal-content-row-label">Quantity:</div>
+              <div class="modal-content-row-value">${projectData['quantity']}</div>
+              <div class="modal-content-row-label">Comments</div>
+              <div class="modal-content-row-value">${projectData['comments']}</div>
+              <div class="modal-content-row-label">Files</div>
+              <div class="modal-content-row-value">
+                <p>${
+                    (function() {
+                      console.log(projectData)
+                      const projectFiles = projectData['files'];
+                      let projectFileSpans = '';
+                      console.log(projectFiles[0])
+                      projectFiles.forEach((file, index) => {
+                        projectFileSpans += '<span class="project-file" data-file-name="' + file.name + '">' + file.name + '.' + file.type + '</span><br/>'
+                      });
+                      return projectFileSpans;
+                    })()
+                  }</p>
+              </div>
+              <div class="modal-content-row-label">Priority</div>
+              <div class="modal-content-row-value">${projectData['priority']}</div>
+            </div>
+            <div class="modal-footer">
+              <button class="modal-submit">Submit Project</button>
+            </div>
+        `;
+
+        modal.innerHTML = modalContent;
+        modalBG.appendChild(modal);
+        document.body.appendChild(modalBG);
+
+        const modalSubmit = modal.querySelector('.modal-submit');
+        modalSubmit.addEventListener('click', () => {
+          modalBG.remove();
+          submitProject.click();
+        });
+      }
+
+    //   reviewProject.addEventListener('click', () => {
+    //     const inputs = theForm.querySelectorAll('input');
+    //     const selects = theForm.querySelectorAll('select');
+    //     const textareaValue = theForm.querySelector('textarea').value;
+    //     const projectData = {};
+    //     let projectID;
+    //     const date = new Date();
+    //     const dateString = date.toDateString();
+    //     const timeString = date.toTimeString();
+    //     let validCount = 0;
+    //     let inputCount = 0;
+    //     let isValid = false;
+    //     let procedures = [];
+
+    //     inputs.forEach((input, index) => {
+    //       if (input.type == 'checkbox') {
+    //         console.log('checkbox');
+    //         if (input.checked) {
+    //           procedures.push(input.value);
+    //         }
+
+    //       } else {
+    //         projectData[input.name] = input.value;
+    //       }
+
+
+    //       console.log(input.value);
+    //       console.log(input.name);
+
+    //       if (input.name="procedure_name") {
+    //         console.log(input.value);
+    //         console.log(input.name);
+    //       }
+
+    //       if (input.validity.valid) {
+    //         validCount++;
+    //       } else {
+    //         validCount = 0;
+    //       }
+
+    //       if (validCount == index + 1) {
+    //         isValid = true;
+    //       } else {
+    //         isValid = false;
+    //       }
+    //     });
+
+    //     selects.forEach((select) => {
+    //       console.log(select.value);
+    //       projectData[select.name] = select.value;
+    //     });
+
+    //     projectData['files'] = filesArr;
+
+    //     fileHandler.createOrRelocateDirectory('dump', projectData['files']);
+
+    //     projectData['comments'] = textareaValue;
+    //     projectData['cut_time'] = 0;
+    //     projectData['labor_time'] = 0;
+    //     projectData['pending_ranking'] = 0;
+    //     projectData['date'] = dateString + ' @ ' + timeString;
+    //     projectData['procedures'] = procedures;
+
+    //     projectData['status'] = 'pending';
+
+    //     projectData['uniqueID'] = (new Date().getTime()) + projectData['project_name'].replace(' ', '');
+
+    //     window.localStorage.setItem('pendingProjectData', JSON.stringify(projectData));
+
+    //     console.log(projectData);
+
+    //     if(isValid) {
+    //       showReviewModal(projectData);
+    //     } else {
+    //       console.log('Please fill out all required fields');
+    //     }
+
+    //     console.log('data written to local storage');
+    //   })
+
+      submitProject.addEventListener('click', () => {
+        const pendingProjectData = window.localStorage.getItem('pendingProjectData');
+        const specifiedDriveLetter = fileHandler.getSpecifiedDriveLetter();
+        const JSONppd = JSON.parse(pendingProjectData);
+        //fileHandler.addProjectToLocal(JSON.parse(pendingProjectData));
+        
+        //writeToFile(pendingProjectData, 'pending');
+        console.log(pendingProjectData);
+        console.log(JSONppd);
+
+        //window.localStorage.removeItem('pendingProjectData');
+
+        //svgConvertedContainer.innerHTML = '';
+        // filePreviewPane.classList.remove('has-elements');
+        // theForm.reset();
+        // setTimeout(() => {
+        //   document.querySelector('.page-heading').click();
+        // }, 1000);
+
+        console.log('data written to file');
+
+        const projectFiles = JSONppd['files'];
+        let projectFileSpans = '';
+
+        projectFiles.forEach((file, index) => {
+          projectFileSpans += file.name + '.' + file.type
+          if (projectFiles.length != index + 1) {
+            projectFileSpans += ','
+          }
+        });
+        console.log(projectFileSpans);
+
+        JSONppd['fileNamesList'] = projectFileSpans;
+
+        const strungOutJSONppd = JSON.stringify(JSONppd);
+
+        console.log(strungOutJSONppd);
+
+        //dbUtils.dbInteractionCall('create', 'pending', pendingProjectData);
+        dbUtils.dbInteractionCall('create', 'pending', strungOutJSONppd);                  
+
+        console.log(JSON.parse(pendingProjectData));
+        
+
+        for (let item in JSONppd) {
+          //console.log(JSONppd);
+          //console.log(JSONppd[item]);
+          if(item == 'files') {
+            console.log(JSONppd[item].length);
+            console.log(JSONppd[item]);
+          }
+        }
+
+        //fileHandler.createOrRelocateDirectory('create', JSON.parse(pendingProjectData));
+        fileHandler.createOrRelocateDirectory('create', JSON.parse(strungOutJSONppd));
+
+        console.log('data written to db');
+        window.location.reload();
+      });
+
+    //   const previewIMG = (imgFile) => {
+    //     const imgWrapper = document.createElement('div');
+    //     const imgName = document.createElement('p');
+    //     const img = document.createElement('img');
+    //     const viewInProgramButton = document.createElement('button');
+    //     viewInProgramButton.innerHTML = 'Open File';
+    //     viewInProgramButton.classList.add('view-in-program');
+
+    //     imgWrapper.classList.add('img-wrapper');
+    //     imgName.innerHTML = imgFile.name;
+
+    //     img.setAttribute('src', imgFile.path);
+    //     img.setAttribute('width', '500');
+    //     img.setAttribute('height', '500');
+    //     img.setAttribute('alt', imgFile.name);
+
+    //     imgWrapper.appendChild(imgName);
+    //     imgWrapper.appendChild(img);
+    //     imgWrapper.appendChild(viewInProgramButton);
+
+    //     viewInProgramButton.addEventListener('click', () => {
+    //       fileHandler.openFileInProgram(imgFile);
+    //     });
+
+    //     svgConvertedContainer.appendChild(imgWrapper);
+    //   };
+
+    //   const previewPDF = (pdfFile) => {
+    //     const pdfFilePath = pdfFile.path;
+    //     const pdfFileName = pdfFile.name;
+
+    //     const HTMLObject = document.createElement('object');
+    //     HTMLObject.setAttribute('data', pdfFilePath);
+    //     HTMLObject.setAttribute('width', '500');
+    //     HTMLObject.setAttribute('height', '500');
+
+    //     const PDFWrapper = document.createElement('div');
+    //     PDFWrapper.classList.add('pdf-wrapper');
+    //     const PDFName = document.createElement('p');
+    //     PDFName.innerHTML = pdfFileName;
+    //     const viewInProgramButton = document.createElement('button');
+    //     viewInProgramButton.innerHTML = 'Open File';
+    //     viewInProgramButton.classList.add('view-in-program');
+
+    //     PDFWrapper.appendChild(PDFName);
+
+    //     PDFWrapper.appendChild(HTMLObject);
+    //     PDFWrapper.appendChild(viewInProgramButton);
+
+    //     viewInProgramButton.addEventListener('click', () => {
+    //       fileHandler.openFileInProgram(pdfFile);
+    //     });
+
+    //     svgConvertedContainer.appendChild(PDFWrapper);
+    //   };
+
+    //   const previewDXF = (dxf, file) => {
+    //     dxf.config.verbose = true
+    //     const convertedDXFtoSVGDiv = document.createElement('div');
+    //     convertedDXFtoSVGDiv.classList.add('dxf-wrapper');
+
+    //     const viewInProgramButton = document.createElement('button');
+    //     viewInProgramButton.innerHTML = 'Open in OMAX';
+    //     viewInProgramButton.classList.add('view-in-program');
+
+    //     const dxfName = document.createElement('p');
+    //     dxfName.innerHTML = file.name;
+
+    //     convertedDXFtoSVGDiv.appendChild(dxfName);
+
+    //     const reader = new FileReader();
+    //     // numberOfEntities.innerHTML = 'reading...'
+
+    //     reader.onload = function (e) {
+    //       if (e.target.readyState === 2) {
+    //         const dxfContents = e.target.result
+    //         const helper = new dxf.Helper(dxfContents)
+    //         // numberOfEntities.innerHTML = helper.denormalised.length
+    //         const svg = helper.toSVG()
+    //         svgContainer.innerHTML = svg;
+    //         let convertedDXF = dxfHandler.convertDXFToOmaxColors(svgContainer, dxfContents);
+
+    //         svgContainer.innerHTML = '';
+    //         convertedDXFtoSVGDiv.appendChild(convertedDXF);
+    //       }
+    //     }
+
+    //     reader.readAsBinaryString(file);
+
+    //     convertedDXFtoSVGDiv.appendChild(viewInProgramButton);
+    //     viewInProgramButton.addEventListener('click', () => {
+    //       fileHandler.openFileInProgram(file);
+    //     });
+
+    //     svgConvertedContainer.appendChild(convertedDXFtoSVGDiv);
+    //   }
+
+    //   fileInput.addEventListener('change', function (event) {
+    //     const files = event.target.files;
+
+    //     for(let file in files) {
+    //       const tempFileObj = {};
+
+    //       if (typeof(files[file]) == 'object') {
+    //         const fileType = files[file].name.split('.').pop();
+    //         const fileName = files[file].name.split('.').shift();
+
+    //         console.log(fileType)
+
+    //         if (fileType == 'dxf') {
+    //           window.setTimeout(function() {
+    //             previewDXF(dxf, files[file]);
+    //           }, 500);
+    //         } else if (fileType == 'pdf') {
+    //           window.setTimeout(function() {
+    //             previewPDF(files[file]);
+    //           }, 500);
+    //         } else if (fileType == 'jpg' || fileType == 'jpeg' || fileType == 'png' || fileType == 'gif') {
+    //           window.setTimeout(function() {
+    //             previewIMG(files[file]);
+    //           }, 500);
+    //         } else {
+    //           console.log('file type not supported');
+    //         }
+
+    //         tempFileObj['path'] = files[file].path;
+    //         tempFileObj['type'] = fileType;
+    //         tempFileObj['name'] = fileName;
+    //       }
+
+    //       const blah = URL.createObjectURL(files[file]);
+    //       console.log(blah);
+
+    //       tempFileObj['url'] = blah;
+
+    //       //fileHandler.createOrRelocateDirectory('create', blah);
+
+    //       filesArr.push(tempFileObj);
+    //       filePreviewPane.classList.add('has-elements');
+    //     }
+
+    //   });
+
+    </script>
+  </body>
+</html>

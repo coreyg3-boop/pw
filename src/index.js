@@ -34,10 +34,10 @@ ipcMain.on('create-or-relocate-directory', (event, action, projectSpecs, specifi
     console.log(projectSpecs)
 
     if (fs.existsSync(pathStringClient)) {
-      console.log('pathStringClient exists');
+      console.log('pathStringClient exists: 37');
     } else {
       fs.mkdirSync(pathStringClient);
-      console.log('pathStringClient created');
+      console.log('pathStringClient created: 40');
     }
 
     projectSpecs.forEach((tempFileObj) => {
@@ -77,31 +77,31 @@ ipcMain.on('create-or-relocate-directory', (event, action, projectSpecs, specifi
     oldStatusDirectoryPathClientProject = path.join(specifiedDriveLetter + '\\waterjetData\\' + oldStatus + '\\' + projectSpecs.client_name + '\\' + projectSpecs.project_name);
 
     if (fs.existsSync(pathStringClient)) {
-      console.log('pathStringClient exists');
+      console.log('pathStringClient exists: 80');
     } else {
       fs.mkdirSync(pathStringClient);
-      console.log('pathStringClient created');
+      console.log('pathStringClient created: 83');
     }
 
     if (fs.existsSync(pathStringClientProject)) {
-      console.log('pathStringClientProject exists');
+      console.log('pathStringClientProject exists: 87');
     } else {
       fs.mkdirSync(pathStringClientProject);
-      console.log('pathStringClientProject created');
+      console.log('pathStringClientProject created: 90');
     }
 
     if (fs.existsSync(oldStatusDirectoryPathClient)) {
-      console.log('pathStringClient exists');
+      console.log('pathStringClient exists: 94');
     } else {
       fs.mkdirSync(oldStatusDirectoryPathClient);
-      console.log('pathStringClient created');
+      console.log('pathStringClient created: 97');
     }
 
     if (fs.existsSync(oldStatusDirectoryPathClientProject)) {
-      console.log('pathStringClientProject exists');
+      console.log('pathStringClientProject exists: 101');
     } else {
       fs.mkdirSync(oldStatusDirectoryPathClientProject);
-      console.log('pathStringClientProject created');
+      console.log('pathStringClientProject created: 104');
     }
 
     console.log(oldStatusDirectoryPathClientProject);
@@ -148,17 +148,17 @@ ipcMain.on('create-or-relocate-directory', (event, action, projectSpecs, specifi
     const pathStringClientProject = path.join(specifiedDriveLetter + '\\waterjetData\\' + projectSpecs.status + '\\' + projectSpecs.client_name + '\\' + projectSpecs.project_name);
 
     if (fs.existsSync(pathStringClient)) {
-      console.log('pathStringClient exists');
+      console.log('pathStringClient exists: 151');
     } else {
       fs.mkdirSync(pathStringClient);
-      console.log('pathStringClient created');
+      console.log('pathStringClient created: 154');
     }
 
     if (fs.existsSync(pathStringClientProject)) {
-      console.log('pathStringClientProject exists');
+      console.log('pathStringClientProject exists: 158');
     } else {
       fs.mkdirSync(pathStringClientProject);
-      console.log('pathStringClientProject created');
+      console.log('pathStringClientProject created: 161');
     }
 
     for (let projectSpec in projectSpecs) {
