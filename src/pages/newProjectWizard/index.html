@@ -77,6 +77,7 @@
         position: relative;
         left: 0;
         top: 50px;
+        z-index: 10;
       }
         .wizard-nav-top {
             grid-area: wizard-nav-top;
@@ -107,6 +108,7 @@
             width: 750px;
             position: relative;
             transition: all 0.5s ease 0s;
+            z-index: 10;
         }
         .wizard-one {
             grid-area: wizard-one;
@@ -172,8 +174,8 @@
 .flipper {
 	transition: 0.6s;
 	transform-style: preserve-3d;
-
 	position: relative;
+  z-index: 10;
 }
 
 /* hide back of pane during swap */
@@ -594,7 +596,12 @@ section.content {
 
         projectData['status'] = 'pending';
 
-        console.log(projectData);
+        if (projectData['thickness'].length === 0) {
+          projectData['thickness'] = 0;
+          projectData['unit'] = 'mm';
+          projectData['material'] = 'NA';
+          projectData['quantity'] = 0;
+        }
 
         if (projectData['project_name'] == undefined) {
             projectData['uniqueID'] = '0001';
@@ -1102,51 +1109,51 @@ section.content {
     //     svgConvertedContainer.appendChild(convertedDXFtoSVGDiv);
     //   }
 
-    //   fileInput.addEventListener('change', function (event) {
-    //     const files = event.target.files;
+      fileInput.addEventListener('change', function (event) {
+        const files = event.target.files;
 
-    //     for(let file in files) {
-    //       const tempFileObj = {};
+        for(let file in files) {
+          const tempFileObj = {};
 
-    //       if (typeof(files[file]) == 'object') {
-    //         const fileType = files[file].name.split('.').pop();
-    //         const fileName = files[file].name.split('.').shift();
+          if (typeof(files[file]) == 'object') {
+            const fileType = files[file].name.split('.').pop();
+            const fileName = files[file].name.split('.').shift();
 
-    //         console.log(fileType)
+            console.log(fileType)
 
-    //         if (fileType == 'dxf') {
-    //           window.setTimeout(function() {
-    //             previewDXF(dxf, files[file]);
-    //           }, 500);
-    //         } else if (fileType == 'pdf') {
-    //           window.setTimeout(function() {
-    //             previewPDF(files[file]);
-    //           }, 500);
-    //         } else if (fileType == 'jpg' || fileType == 'jpeg' || fileType == 'png' || fileType == 'gif') {
-    //           window.setTimeout(function() {
-    //             previewIMG(files[file]);
-    //           }, 500);
-    //         } else {
-    //           console.log('file type not supported');
-    //         }
+            if (fileType == 'dxf') {
+              window.setTimeout(function() {
+                //previewDXF(dxf, files[file]);
+              }, 500);
+            } else if (fileType == 'pdf') {
+              window.setTimeout(function() {
+                //previewPDF(files[file]);
+              }, 500);
+            } else if (fileType == 'jpg' || fileType == 'jpeg' || fileType == 'png' || fileType == 'gif') {
+              window.setTimeout(function() {
+                //previewIMG(files[file]);
+              }, 500);
+            } else {
+              console.log('file type not supported');
+            }
 
-    //         tempFileObj['path'] = files[file].path;
-    //         tempFileObj['type'] = fileType;
-    //         tempFileObj['name'] = fileName;
-    //       }
+            tempFileObj['path'] = files[file].path;
+            tempFileObj['type'] = fileType;
+            tempFileObj['name'] = fileName;
+          }
 
-    //       const blah = URL.createObjectURL(files[file]);
-    //       console.log(blah);
+          const blah = URL.createObjectURL(files[file]);
+          console.log(blah);
 
-    //       tempFileObj['url'] = blah;
+          tempFileObj['url'] = blah;
 
-    //       //fileHandler.createOrRelocateDirectory('create', blah);
+          //fileHandler.createOrRelocateDirectory('create', blah);
 
-    //       filesArr.push(tempFileObj);
-    //       filePreviewPane.classList.add('has-elements');
-    //     }
+          filesArr.push(tempFileObj);
+          //filePreviewPane.classList.add('has-elements');
+        }
 
-    //   });
+      });
 
     </script>
   </body>

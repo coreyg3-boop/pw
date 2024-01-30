@@ -25,22 +25,7 @@ const populatePageWithSessionStorage = (dataName) => {
 
     cardList.setAttribute('id', cardListId);
 
-    console.log(JSONprojects);
-
-    if (JSONprojects.length === 0) {
-        const noProjects = document.createElement('p');
-        noProjects.textContent = 'No projects to display';
-        cardList.appendChild(noProjects);
-        return cardList;
-    }
-
-    console.log(dataName);
-
     for(let each in JSONprojects) {
-        console.log(JSONprojects[each]);
-        console.log(each);
-        console.log(JSONprojects);
-
         // const card = pageUtils.makeCard(JSONprojects[each]);
         const card = pageUtils.makeTableCard(JSONprojects[each]);
 

@@ -48,8 +48,6 @@ ipcMain.on('create-or-relocate-directory', (event, action, projectSpecs, specifi
   } else if (action == 'relocate') {
     const pathStringClient = path.join(specifiedDriveLetter + '\\waterjetData\\' + projectSpecs.status + '\\' + projectSpecs.client_name);
     const pathStringClientProject = path.join(specifiedDriveLetter + '\\waterjetData\\' + projectSpecs.status + '\\' + projectSpecs.client_name + '\\' + projectSpecs.project_name);
-    const pathStringClientArchived = path.join(specifiedDriveLetter + '\\waterjetData\\' + projectSpecs.status + '\\' + projectSpecs.client_name);
-    const pathStringClientProjectArchived = path.join(specifiedDriveLetter + '\\waterjetData\\' + projectSpecs.status + '\\' + projectSpecs.client_name + '\\' + projectSpecs.project_name);
 
     let oldStatusDirectoryPathClient;
     let oldStatusDirectoryPathClientProject;
@@ -146,11 +144,8 @@ ipcMain.on('create-or-relocate-directory', (event, action, projectSpecs, specifi
     
 
   } else {
-    const pathStringClient = path.join(specifiedDriveLetter + '\\waterjetData\\pending\\' + projectSpecs.client_name);
-    const pathStringClientProject = path.join(specifiedDriveLetter + '\\waterjetData\\pending\\' + projectSpecs.client_name + '\\' + projectSpecs.project_name);
-    const pathStringClientArchived = path.join(specifiedDriveLetter + '\\waterjetData\\archived\\' + projectSpecs.client_name);
-    const pathStringClientProjectArchived = path.join(specifiedDriveLetter + '\\waterjetData\\archived\\' + projectSpecs.client_name + '\\' + projectSpecs.project_name);
-
+    const pathStringClient = path.join(specifiedDriveLetter + '\\waterjetData\\' + projectSpecs.status + '\\' + projectSpecs.client_name);
+    const pathStringClientProject = path.join(specifiedDriveLetter + '\\waterjetData\\' + projectSpecs.status + '\\' + projectSpecs.client_name + '\\' + projectSpecs.project_name);
 
     if (fs.existsSync(pathStringClient)) {
       console.log('pathStringClient exists: 151');
@@ -159,13 +154,6 @@ ipcMain.on('create-or-relocate-directory', (event, action, projectSpecs, specifi
       console.log('pathStringClient created: 154');
     }
 
-    if (fs.existsSync(pathStringClientArchived)) {
-        console.log('pathStringClient exists: 151');
-      } else {
-        fs.mkdirSync(pathStringClientArchived);
-        console.log('pathStringClient created: 154');
-      }
-
     if (fs.existsSync(pathStringClientProject)) {
       console.log('pathStringClientProject exists: 158');
     } else {
@@ -173,19 +161,11 @@ ipcMain.on('create-or-relocate-directory', (event, action, projectSpecs, specifi
       console.log('pathStringClientProject created: 161');
     }
 
-    if (fs.existsSync(pathStringClientProjectArchived)) {
-        console.log('pathStringClientProject exists: 158');
-      } else {
-        fs.mkdirSync(pathStringClientProjectArchived);
-        console.log('pathStringClientProject created: 161');
-      }
-
     for (let projectSpec in projectSpecs) {
       if (projectSpec == 'files') {
         projectSpecs[projectSpec].forEach((file) => {
-          console.log(file, ' :167');
+          console.log(file);
           fs.copyFileSync(file.path, path.join(pathStringClientProject + '\\' + file.name + '.' + file.type));
-          fs.copyFileSync(file.path, path.join(pathStringClientProjectArchived + '\\' + file.name + '.' + file.type));
         })
       //console.log(projectSpecs[projectSpec]);
       }

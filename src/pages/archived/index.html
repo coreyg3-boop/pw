@@ -222,13 +222,13 @@
         color: black;
       }
       .project-list-item .priority.low {
-        background-color: lightgreen;
+        background-color: lightgoldenrodyellow;
       }
       .project-list-item .priority.med {
         background-color: lightgoldenrodyellow;
       }
       .project-list-item .priority.high {
-        background-color: lightsalmon;
+        background-color: lightgoldenrodyellow;
       }
       .project-list-item .priority.normal {
         background-color: lightgoldenrodyellow;
@@ -253,8 +253,8 @@
       }
       .project-list-item .status.inProgress:before {
         content: '';
-        background-color: #427dc0;
-        box-shadow: -1px -1px 3px #104679 inset;
+        background-color: #49ca5b;
+        box-shadow: -1px -1px 3px #3ba349 inset;
       }
       .project-list-item .status.completed:before {
         content: '';
@@ -290,11 +290,11 @@
         background-color: #1f1f1f;
         grid-auto-columns: minmax(0, 1.5fr);
         grid-auto-flow: column;
-        grid-template-columns: repeat(5, minmax(0, 1.5fr));
+        grid-template-columns: repeat(4, minmax(0, 1.5fr));
         grid-template-rows: 1fr 1fr;
         grid-template-areas:
-          "comments cutTime createdDate timeInputs timeInputs"
-          "procedures quantity material timeInputs timeInputs";
+          "comments cutTime createdDate timeInputs"
+          "procedures quantity material timeInputs";
           /* "comments cutTime createdDate fileNames files projectID"
           "laborTime pendingRank procedures quantity material uniqueID"; */
         /* height: 3em; */
@@ -306,7 +306,7 @@
         /* border-width: 1px;
         border-style: solid;
         border-image: linear-gradient( #f32828, #f32828) 2; */
-        border: 2px solid rgba(9,9,121,1);
+        /* border: 2px solid rgba(9,9,121,1); */
         background: steelblue;
       }
       .project-list-item.expanded > .details-pane {
@@ -314,7 +314,7 @@
         display: grid;
         height: 25em;
         background: rgb(2,0,36);
-        background: linear-gradient(9deg, rgba(2,0,36,1) 0%, rgba(70,130,180,1) 95%, rgba(70,130,180,1) 100%); 
+        background: #121212;
         z-index: 1;
       }
       .detail-pane div.details-comments {
@@ -337,7 +337,15 @@
       }
       .details-pane div.details-time-inputs {
         grid-area: timeInputs;
-        margin-top: 15px;        
+        border-left: 1px solid #fff;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr;
+        grid-template-areas:
+          'cutTime'
+          'laborTime '
+          'status'
+          'applyUpdates'
       }
       .details-pane div.details-time-inputs form {
         height: 200px;
@@ -347,23 +355,28 @@
           'cutLaborTimeInputs'
           'statusInput';
       }
-      .details-pane div.details-time-inputs form div.cut-labor-time-inputs {
-        grid-area: cutLaborTimeInputs;
-        display: grid;
-        grid-template-areas:
-          'cutTimeInput laborTimeInput';
+      .details-pane div.details-time-inputs div.cut-time-input {
+        grid-area: cutTime;
+        justify-self: center;
+        align-content: center;
       }
-      .details-pane div.details-time-inputs div.cut-labor-time-inputs div.cut-time-input {
-        grid-area: cutTimeInput;
-        display: block;
+      .details-pane div.details-time-inputs input.apply-updates-button {
+        grid-area: applyUpdates;
+        align-self: center;
+        justify-self: center;
       }
-      .details-pane div.details-time-inputs  div.cut-labor-time-inputs div.labor-time-input {
-        grid-area: laborTimeInput;
-        display: block;
+      .details-pane div.details-time-inputs div.cut-time-input label,
+      .details-pane div.details-time-inputs div.labor-time-input label {
+        display: block
       }
-      .details-pane div.details-time-inputs  div.cut-labor-time-inputs div.labor-time-input label,
-      .details-pane div.details-time-inputs div.cut-labor-time-inputs div.cut-time-input label {
-        display: block;
+      .details-pane div.details-time-inputs div.cut-time-input input,
+      .details-pane div.details-time-inputs div.labor-time-input input {
+        width: 100px;
+      }
+      .details-pane div.details-time-inputs div.labor-time-input {
+        grid-area: laborTime;
+        justify-self: center;
+        align-content: center;
       }
 
       .error {
@@ -386,7 +399,9 @@
       }
 
       .details-pane div.details-time-inputs div.status-input {
-        grid-area: statusInput;
+        grid-area: status;
+        display: flow;
+        margin-top: 30px;
       }
       .details-pane div.details-labor-time {
         grid-area: laborTime;
@@ -411,21 +426,22 @@
         
       }
       .project-list-item div.details-pane div {
-        display: inline-block;
+        display: grid;
       }
+    
       .project-list-item div {
         height: 100%;
         display: flex;
         align-items: center;
-        justify-items: center;
+        justify-items: start;
         justify-content: start;
         padding: 0 0.5em;
-        border-width: 1px;
+        /* border-width: 1px;
         border-style: solid;
         border-image: linear-gradient( #4f4d4d, #4f4d4d, #000000, #000000, #4f4d4d, #4f4d4d) 10;
         border-top: none;
         border-bottom: none;
-        border-right: none;
+        border-right: none; */
         width: calc(100% - 1em);
         font-family: 'Roboto-Thin', sans-serif;
       }
@@ -433,7 +449,6 @@
         font-family: 'Roboto-Thin', sans-serif;
       }
       .project-list-item div:first-of-type {
-        padding:0;
         border-left: none;
       }
       .project-list-item div:nth-of-type(2) {
