@@ -6,16 +6,6 @@ const getSpecifiedDriveLetter = () => {
     return specifiedDriveLetter;
 }
 
-// const watchDBFile = (fileName) => {
-//     window.api.watchFile(fileName, specifiedDriveLetter);
-
-//     window.api.onFileChange((path) => {
-//         const fileName = path.split('.')[0];
-//         getDBFileAddToLocal(fileName);
-//         console.log('file changed', path, fileName);
-//     });
-// }
-
 const populatePageWithSessionStorage = (dataName) => {
     const sessionData = window.sessionStorage;
     const projects= sessionData.getItem(dataName);
@@ -25,8 +15,6 @@ const populatePageWithSessionStorage = (dataName) => {
 
     cardList.setAttribute('id', cardListId);
 
-    console.log(JSONprojects);
-
     if (JSONprojects.length === 0) {
         const noProjects = document.createElement('p');
         noProjects.textContent = 'No projects to display';
@@ -34,14 +22,7 @@ const populatePageWithSessionStorage = (dataName) => {
         return cardList;
     }
 
-    console.log(dataName);
-
     for(let each in JSONprojects) {
-        console.log(JSONprojects[each]);
-        console.log(each);
-        console.log(JSONprojects);
-
-        // const card = pageUtils.makeCard(JSONprojects[each]);
         const card = pageUtils.makeTableCard(JSONprojects[each]);
 
         cardList.appendChild(card);
@@ -51,16 +32,11 @@ const populatePageWithSessionStorage = (dataName) => {
 }
 
 
-const openFileInProgram = (file) => {
-
-    console.log(file);
-    
+const openFileInProgram = (file) => {    
     window.api.openFileInApplication(file.path, specifiedDriveLetter);
-
 }
 
 const createOrRelocateDirectory = (action, projectSpecs) => {
-    console.log(projectSpecs);
     window.api.createOrRelocateDirectory(action, projectSpecs, specifiedDriveLetter);
 }
 

@@ -39,7 +39,7 @@ body > main section.content {
 }
 
 .grid-container:has(div.file-preview.has-elements) {
-    grid-template-columns: 1fr 1.25fr;
+    grid-template-columns: 1fr 1.5fr;
     transition: all 0.25s ease-in-out;
 }
 
@@ -93,6 +93,7 @@ form input {
 .input-block {
     width: 80%;
     margin: 0 auto;
+    min-height: 1px;
 }
 
 input#project-name,
@@ -285,6 +286,8 @@ datalist {
     top: 158px;
     box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
     z-index: 5;
+    display: none;
+    min-height: 1px;
 }
 
 datalist#client-list {

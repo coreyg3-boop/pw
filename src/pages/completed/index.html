@@ -150,7 +150,7 @@
         font-family: 'Roboto', 'sans-serif';
         border-radius: 5px;
       }
-      .project-list-item::after {
+      .project-list-item.expanded::after {
         content: 'details';
         position: absolute;
         width: 100%;
@@ -161,6 +161,14 @@
         right: 0;
         z-index: -1;
         border-radius: 5px;
+      }
+      .project-list-item::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        background-color: transparent;
+        opacity: 0;
       }
       /* .project-list-item .customer {
         grid-area: customer;
@@ -280,6 +288,11 @@
         cursor: pointer;
         position: relative;
         z-index: 50;
+      }
+      .project-list-item > .details-pane.no-show {
+        display: none;
+        opacity: 0;
+        transition: all 0.5s;
       }
       .project-list-item > .details-pane {
         grid-area: detailsPane;
@@ -489,20 +502,18 @@
     <main id="currentProjects">
       <nav id="nav-menu">
         <button class="goToPage menu-item" data-href="../home/index.html">Home</button>
-        <!-- <button class="goToPage menu-item" data-href="../newProject/index.html">New Project</button> -->
         <button class="goToPage menu-item active" data-href="../completed/index.html">Completed</button>
         <button class="goToPage menu-item" data-href="../archived/index.html">Archived</button>
         <button class="goToPage menu-item" data-href="../settings/index.html">Settings</button>
       </nav>
       <section class="content">
         <div class="page-heading">Completed Projects</div>
-        <div class="grid-container-project-list">
+        <div class="grid-container-project-list init">
             <div id="addNewProject">
                 <div class="button-wrapper"><button class="goToPage" data-href="../newProject/index.html" style="display: none;">Add New Project</button></div>
                 <div class="date-time-today">
                   <div class="day"></div>
                   <div class="date"></div>
-                  <!-- <div class="time"></div> -->
                 </div>
               </div>
           <div id="projectListKey">
@@ -532,12 +543,6 @@
             </div>
           </div>
           <div id="sortableProjectsList" class="project-group"></div>
-          <!-- <div class="file-preview">
-            <p class="file-preview-heading">Selected Files</p>
-            <div id="svg"></div>
-            <div id="svg-converted"></div>
-            <div class="space-buffer"></div>
-          </div> -->
         </div>
       </section>
 
@@ -554,26 +559,11 @@
       const day = todaysDate.toLocaleDateString('en-EN', { weekday: 'long' });
       const date = todaysDate.toLocaleDateString('en-EN', { year: 'numeric', month: 'long', day: 'numeric' });
       
-      //const currentTime = todaysDate.toLocaleTimeString();
       dateTimeToday.children[0].innerHTML = day;
       dateTimeToday.children[1].innerHTML = date;
-      // dateTimeToday.children[2].innerHTML = currentTime;
-
-      // setInterval(() => {
-      //   const todaysDate = new Date();
-      //   const day = todaysDate.toLocaleDateString('en-EN', { weekday: 'long' });
-      //   const date = todaysDate.toLocaleDateString('en-EN', { year: 'numeric', month: 'long', day: 'numeric' });
-      //   const currentTime = todaysDate.toLocaleTimeString();
-      //   dateTimeToday.children[0].innerHTML = day;
-      //   dateTimeToday.children[1].innerHTML = date;
-      //   // dateTimeToday.children[2].innerHTML = currentTime;
-      // }, 1000);
 
       pageUtils.menuNavigation();
       pageUtils.pageChangeFade();
-
-      // Simple list
-//Sortable.create(simpleList, { /* options */ });
 
       // List with handle
       Sortable.create(sortableProjectsList, {
@@ -610,14 +600,12 @@
         const addToPage = () => {
           try {
             setTimeout(() => {
-              // const cardList = fileHandler.populatePageWithSessionStorage('pending');
               const cardList = fileHandler.populatePageWithSessionStorage('completed');
               const cards = cardList.querySelectorAll('.project-list-item');
               cards.forEach((card) => {
                 projectList.appendChild(card);
               })
               moveRushToTop();
-              // projectList.appendChild(cardList);
             }, 100);
           } 
           catch (e) {
@@ -629,35 +617,17 @@
 
       getPageProjects();
 
-      //window.api.dbInteraction('connect');
+      window.onload = () => {
+        const mainGridContainer = document.querySelector('.grid-container-project-list');
 
-      // window.addEventListener('load', (ev) => {
-      //   console.log('document loaded');
-      //   const fileData = window.api.getFile('clients');
-      //   fileDataP.innerHTML = fileData;
-      // });
-
-        //dbUtils.dbInteractionCall();
-
-    //   getFile.addEventListener('click', () => {
-    //     getDBFile('clients');
-    //   });
-
-    //   theForm.addEventListener('submit', (e) => {
-    //     e.preventDefault();
-    //     const name = document.querySelector('#name').value;
-    //     const age = document.querySelector('#age').value;
-    //     const data = { name, age };
-    //     writeToFile(JSON.stringify(data));
-    //     console.log('data written to file');
-    //   });
-
-    //   window.api.onFileResponse((data) => {
-    //     console.log(data); // prints the content of data.json
-    //     //fileDataP.innerHTML = data;
-    //     fileDataP.innerHTML = data
-    // });
-
+        setTimeout(() => {
+          const detailPanes = document.querySelectorAll('.details-pane');
+          detailPanes.forEach((pane) => {
+            pane.classList.remove('no-show');
+          });
+          mainGridContainer.classList.remove('init');
+        }, 200)
+      }
     </script>
   </body>
 </html>

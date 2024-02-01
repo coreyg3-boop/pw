@@ -224,6 +224,11 @@ body > main#currentProjects section.content {
     transition: all 0.25s ease-in-out;
 }
 
+.grid-container-project-list.init {
+    opacity: 0;
+    transition: all 0.5s;
+}
+
 .grid-container-project-list {
     display: grid;
     grid-template-columns: 1fr;
@@ -239,6 +244,8 @@ body > main#currentProjects section.content {
     position: absolute;
     left: 3em;
     top: 7em;
+    opacity: 1;
+    transition: all 0.5s;
 }
 
 .grid-container:has(div.file-preview.has-elements) {

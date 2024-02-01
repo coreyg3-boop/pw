@@ -104,7 +104,6 @@
         grid-template-columns: 0.125fr minmax(0, 1fr) minmax(0, 1.5fr) repeat(2, minmax(0, 0.75fr)) minmax(0, 0.3fr) minmax(0, 0.75fr) 0.125fr;
         grid-template-areas:
           'customer project processes dueDate priority status details';
-        /* height: 3em; */
         line-height:1;
         margin:0.1em 0;
         border-bottom: 2px solid #000;
@@ -133,11 +132,9 @@
         grid-auto-columns: minmax(0, 1.5fr);
         grid-auto-flow: column;
         grid-template-columns: 0.125fr minmax(0, 1fr) minmax(0, 1.5fr) repeat(2, minmax(0, 0.75fr)) minmax(0, 0.3fr) minmax(0, 0.75fr) 0.125fr;
-        /* grid-template-rows: 1fr 0.5fr; */
         grid-template-areas:
           'anchor customer project processes dueDate priority status details'
           'detailsPane detailsPane detailsPane detailsPane detailsPane detailsPane detailsPane detailsPane';
-        /* height: 3em; */
         font-size: 18px;
         line-height:1;
         margin:0.1em 0;
@@ -150,7 +147,7 @@
         font-family: 'Roboto', 'sans-serif';
         border-radius: 5px;
       }
-      .project-list-item::after {
+      .project-list-item.expanded::after {
         content: 'details';
         position: absolute;
         width: 100%;
@@ -162,33 +159,14 @@
         z-index: -1;
         border-radius: 5px;
       }
-      /* .project-list-item .customer {
-        grid-area: customer;
-        padding-left:0.5em;
-        align-self: center;
-        line-height: 1;
-        padding-right: 0.5em;
-        border-right:1px solid rgba(0,0,0,0.25);
-        width: calc(100% - 1em);
+      .project-list-item::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        background-color: transparent;
+        opacity: 0;
       }
-      .project-list-item .project {
-        grid-area: project;
-        padding-left:0.5em;
-        align-self: center;
-        line-height: 1;
-        padding-right: 0.5em;
-        border-right:1px solid rgba(0,0,0,0.25);
-        width: calc(100% - 1em);
-      }
-      .project-list-item .processes {
-        grid-area: processes;
-        text-align: center;
-        font-size: 18px;
-        padding-left: 0.5em;
-        padding-right: 0.5em;
-        border-right:1px solid rgba(0,0,0,0.25);
-        width: calc(100% - 1em);
-      } */
       .project-list-item .row-handle {
         grid-area: anchor;
         background: #000046;  /* fallback for old browsers */
@@ -196,27 +174,12 @@
         background: linear-gradient(to right, #550202, #1f1f1f); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
         align-self:center;
         justify-self: center;
-        /* height: 3em; */
         line-height: 3em;
         width:100%;
         cursor: grab;
         border-top-left-radius: 5px;
         border-bottom-left-radius: 5px;
       }
-      /* .project-list-item .details {
-        grid-area: details;
-        font-size: 0.75em;
-        text-align: center;
-        padding-left: 1em;
-        cursor: pointer;
-      }
-      .project-list-item .priority {
-        grid-area: priority;
-        background-color: green;
-        width: 100%;
-        height: 100%;
-        text-align: center;
-      } */
       .project-list-item .priority {
         grid-area: priority;
         color: black;
@@ -281,6 +244,11 @@
         position: relative;
         z-index: 50;
       }
+      .project-list-item > .details-pane.no-show {
+        display: none;
+        opacity: 0;
+        transition: all 0.5s;
+      }
       .project-list-item > .details-pane {
         grid-area: detailsPane;
         height: 0;
@@ -295,18 +263,9 @@
         grid-template-areas:
           "comments cutTime createdDate timeInputs"
           "procedures quantity material timeInputs";
-          /* "comments cutTime createdDate fileNames files projectID"
-          "laborTime pendingRank procedures quantity material uniqueID"; */
-        /* height: 3em; */
         font-size: 15px;
-
-        /* transition: all 0.25s; */
       }
       .project-list-item.expanded {
-        /* border-width: 1px;
-        border-style: solid;
-        border-image: linear-gradient( #f32828, #f32828) 2; */
-        /* border: 2px solid rgba(9,9,121,1); */
         background: steelblue;
       }
       .project-list-item.expanded > .details-pane {
@@ -386,15 +345,12 @@
       @keyframes flashError {
         0% {
           background-color: #ff2e2e;
-          /* border:1px solid #ff2e2e; */
         }
         50% {
           background-color: #ffb0b0;
-          /* border:1px solid #ffb8b8; */
         }
         100% {
           background-color: #ff2e2e;
-          /* border:1px solid #ff2e2e; */
         }
       }
 
@@ -436,12 +392,6 @@
         justify-items: start;
         justify-content: start;
         padding: 0 0.5em;
-        /* border-width: 1px;
-        border-style: solid;
-        border-image: linear-gradient( #4f4d4d, #4f4d4d, #000000, #000000, #4f4d4d, #4f4d4d) 10;
-        border-top: none;
-        border-bottom: none;
-        border-right: none; */
         width: calc(100% - 1em);
         font-family: 'Roboto-Thin', sans-serif;
       }
@@ -489,20 +439,18 @@
     <main id="currentProjects">
       <nav id="nav-menu">
         <button class="goToPage menu-item active" data-href="../home/index.html">Home</button>
-        <!-- <button class="goToPage menu-item" data-href="../newProject/index.html">New Project</button> -->
         <button class="goToPage menu-item" data-href="../completed/index.html">Completed</button>
         <button class="goToPage menu-item" data-href="../archived/index.html">Archived</button>
         <button class="goToPage menu-item" data-href="../settings/index.html">Settings</button>
       </nav>
       <section class="content">
         <div class="page-heading">Current Projects</div>
-        <div class="grid-container-project-list">
+        <div class="grid-container-project-list init">
           <div id="addNewProject">
             <div class="button-wrapper"><button class="goToPage" data-href="../newProjectWizard/index.html">Add New Project</button></div>
             <div class="date-time-today">
               <div class="day"></div>
               <div class="date"></div>
-              <!-- <div class="time"></div> -->
             </div>
           </div>
           <div id="projectListKey">
@@ -532,12 +480,6 @@
             </div>
           </div>
           <div id="sortableProjectsList" class="project-group"></div>
-          <!-- <div class="file-preview">
-            <p class="file-preview-heading">Selected Files</p>
-            <div id="svg"></div>
-            <div id="svg-converted"></div>
-            <div class="space-buffer"></div>
-          </div> -->
         </div>
       </section>
 
@@ -554,26 +496,11 @@
       const day = todaysDate.toLocaleDateString('en-EN', { weekday: 'long' });
       const date = todaysDate.toLocaleDateString('en-EN', { year: 'numeric', month: 'long', day: 'numeric' });
       
-      //const currentTime = todaysDate.toLocaleTimeString();
       dateTimeToday.children[0].innerHTML = day;
       dateTimeToday.children[1].innerHTML = date;
-      // dateTimeToday.children[2].innerHTML = currentTime;
-
-      // setInterval(() => {
-      //   const todaysDate = new Date();
-      //   const day = todaysDate.toLocaleDateString('en-EN', { weekday: 'long' });
-      //   const date = todaysDate.toLocaleDateString('en-EN', { year: 'numeric', month: 'long', day: 'numeric' });
-      //   const currentTime = todaysDate.toLocaleTimeString();
-      //   dateTimeToday.children[0].innerHTML = day;
-      //   dateTimeToday.children[1].innerHTML = date;
-      //   // dateTimeToday.children[2].innerHTML = currentTime;
-      // }, 1000);
 
       pageUtils.menuNavigation();
       pageUtils.pageChangeFade();
-
-      // Simple list
-//Sortable.create(simpleList, { /* options */ });
 
       // List with handle
       Sortable.create(sortableProjectsList, {
@@ -610,7 +537,6 @@
         const addToPage = () => {
           try {
             setTimeout(() => {
-              // const cardList = fileHandler.populatePageWithSessionStorage('pending');
               const cardListPending = fileHandler.populatePageWithSessionStorage('pending');
               const cardListInProgress = fileHandler.populatePageWithSessionStorage('inProgress');
               const cardsPending = cardListPending.querySelectorAll('.project-list-item');
@@ -622,7 +548,6 @@
                 projectList.appendChild(card);
               })
               moveRushToTop();
-              // projectList.appendChild(cardList);
             }, 100);
           } 
           catch (e) {
@@ -634,35 +559,17 @@
 
       getPageProjects();
 
-      //window.api.dbInteraction('connect');
+      window.onload = () => {
+        const mainGridContainer = document.querySelector('.grid-container-project-list');
 
-      // window.addEventListener('load', (ev) => {
-      //   console.log('document loaded');
-      //   const fileData = window.api.getFile('clients');
-      //   fileDataP.innerHTML = fileData;
-      // });
-
-        //dbUtils.dbInteractionCall();
-
-    //   getFile.addEventListener('click', () => {
-    //     getDBFile('clients');
-    //   });
-
-    //   theForm.addEventListener('submit', (e) => {
-    //     e.preventDefault();
-    //     const name = document.querySelector('#name').value;
-    //     const age = document.querySelector('#age').value;
-    //     const data = { name, age };
-    //     writeToFile(JSON.stringify(data));
-    //     console.log('data written to file');
-    //   });
-
-    //   window.api.onFileResponse((data) => {
-    //     console.log(data); // prints the content of data.json
-    //     //fileDataP.innerHTML = data;
-    //     fileDataP.innerHTML = data
-    // });
-
+        setTimeout(() => {
+          const detailPanes = document.querySelectorAll('.details-pane');
+          detailPanes.forEach((pane) => {
+            pane.classList.remove('no-show');
+          });
+          mainGridContainer.classList.remove('init');
+        }, 200)
+      }
     </script>
   </body>
 </html>

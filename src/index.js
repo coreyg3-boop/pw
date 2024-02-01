@@ -13,9 +13,9 @@ if (require('electron-squirrel-startup')) {
 
 
 ipcMain.on('get-file', (event, fileName, specifiedDriveLetter) => {
-  const pathString = path.join(specifiedDriveLetter + '\\waterjetData\\' + fileName + '.json');
+  const pathString = path.join(specifiedDriveLetter + '\\waterjetData_testDir\\' + fileName + '.json');
 
-  if (fs.existsSync(path.join(specifiedDriveLetter + '\\waterjetData\\'))) {
+  if (fs.existsSync(path.join(specifiedDriveLetter + '\\waterjetData_testDir\\'))) {
     const data = fs.readFileSync(pathString, 'utf8');
 
     event.sender.send('get-file-response', data, fileName)
@@ -26,11 +26,11 @@ ipcMain.on('get-file', (event, fileName, specifiedDriveLetter) => {
 });
 
 ipcMain.on('create-or-relocate-directory', (event, action, projectSpecs, specifiedDriveLetter) => {
-  console.log(projectSpecs);
-  console.log(action);
+  console.log(projectSpecs, ' :29');
+  console.log(action, ' :30');
 
   if (action == 'dump') {
-    const pathStringClient = path.join(specifiedDriveLetter + '\\waterjetData\\fileQueue');
+    const pathStringClient = path.join(specifiedDriveLetter + '\\waterjetData_testDir\\fileQueue');
     console.log(projectSpecs)
 
     if (fs.existsSync(pathStringClient)) {
@@ -41,115 +41,61 @@ ipcMain.on('create-or-relocate-directory', (event, action, projectSpecs, specifi
     }
 
     projectSpecs.forEach((tempFileObj) => {
-      //fs.copyFileSync(tempFileObj.path, path.join(pathStringClient + '\\' + tempFileObj.path.split('\\').pop()));
       fs.copyFileSync(tempFileObj.path, path.join(pathStringClient + '\\' + tempFileObj.name + '.' + tempFileObj.type));
     })
-
-  } else if (action == 'relocate') {
-    const pathStringClient = path.join(specifiedDriveLetter + '\\waterjetData\\' + projectSpecs.status + '\\' + projectSpecs.client_name);
-    const pathStringClientProject = path.join(specifiedDriveLetter + '\\waterjetData\\' + projectSpecs.status + '\\' + projectSpecs.client_name + '\\' + projectSpecs.project_name);
-    const pathStringClientArchived = path.join(specifiedDriveLetter + '\\waterjetData\\' + projectSpecs.status + '\\' + projectSpecs.client_name);
-    const pathStringClientProjectArchived = path.join(specifiedDriveLetter + '\\waterjetData\\' + projectSpecs.status + '\\' + projectSpecs.client_name + '\\' + projectSpecs.project_name);
-
-    let oldStatusDirectoryPathClient;
-    let oldStatusDirectoryPathClientProject;
-    let newStatusDirectoryPathClient;
-    let newStatusDirectoryPathClientProject;
-    let oldStatus;
-    let newStatus;
-
-    switch(projectSpecs.status) {
-      // case 'pending':
-      //   oldStatus = 'pending';
-      //   break;
-      case 'inProgress':
-        oldStatus = 'pending';
-        break;
-      case 'completed':
-        oldStatus = 'inProgress';
-        break;
-      case 'archived':
-        oldStatus = 'completed';
-        break;
-      default:
-        oldStatus = 'pending';
-    }
-
-    oldStatusDirectoryPathClient = path.join(specifiedDriveLetter + '\\waterjetData\\' + oldStatus + '\\' + projectSpecs.client_name);
-    oldStatusDirectoryPathClientProject = path.join(specifiedDriveLetter + '\\waterjetData\\' + oldStatus + '\\' + projectSpecs.client_name + '\\' + projectSpecs.project_name);
-
-    if (fs.existsSync(pathStringClient)) {
-      console.log('pathStringClient exists: 80');
-    } else {
-      fs.mkdirSync(pathStringClient);
-      console.log('pathStringClient created: 83');
-    }
-
-    if (fs.existsSync(pathStringClientProject)) {
-      console.log('pathStringClientProject exists: 87');
-    } else {
-      fs.mkdirSync(pathStringClientProject);
-      console.log('pathStringClientProject created: 90');
-    }
-
-    if (fs.existsSync(oldStatusDirectoryPathClient)) {
-      console.log('pathStringClient exists: 94');
-    } else {
-      fs.mkdirSync(oldStatusDirectoryPathClient);
-      console.log('pathStringClient created: 97');
-    }
-
-    if (fs.existsSync(oldStatusDirectoryPathClientProject)) {
-      console.log('pathStringClientProject exists: 101');
-    } else {
-      fs.mkdirSync(oldStatusDirectoryPathClientProject);
-      console.log('pathStringClientProject created: 104');
-    }
-
-    console.log(oldStatusDirectoryPathClientProject);
-    console.log('^ oldStatusDirectoryPathClientProject');
-    console.log(pathStringClientProject);
-    console.log('^ pathStringClientProject');
-
-    fs.cp(oldStatusDirectoryPathClientProject, pathStringClientProject, { recursive: true }, (err) => {
+  } else if (action == 'revive') {
+     const pathStringClientArchived = path.join(specifiedDriveLetter + '\\waterjetData_testDir\\archived\\' + projectSpecs.client_name);
+     const pathStringClientProjectArchived = path.join(specifiedDriveLetter + '\\waterjetData_testDir\\archived\\' + projectSpecs.client_name + '\\' + projectSpecs.project_name);
+     const pathStringClient = path.join(specifiedDriveLetter + '\\waterjetData_testDir\\pending\\' + projectSpecs.client_name);
+     const pathStringClientProject = path.join(specifiedDriveLetter + '\\waterjetData_testDir\\pending\\' + projectSpecs.client_name + '\\' + projectSpecs.project_name);
+     
+     fs.cp(pathStringClientProjectArchived, pathStringClientProject, { recursive: true }, (err) => {
       if (err) {
         console.error(err);
       }
       console.log('dir copied successfully!');
     });
-
-    setTimeout(() => {
-      fse.remove(oldStatusDirectoryPathClientProject, err => {
-        if(err) return console.error(err);
-        console.log('dir removed successfully!')
-      });
   
-      fs.readdir(oldStatusDirectoryPathClientProject, function(err, files) {
-        if (err) {
-           // some sort of error
-        } else {
-           if (!files.length) {
-              // directory appears to be empty
-              console.log('empty dir');
-              fse.remove(oldStatusDirectoryPathClientProject, err => {
-                if(err) return console.error(err);
-              });
-           } else {
-              console.log('dir got files');
+  } else if (action == 'remove') {
+      const pathStringClient = path.join(specifiedDriveLetter + '\\waterjetData_testDir\\pending\\' + projectSpecs.client_name);
+      const pathStringClientProject = path.join(specifiedDriveLetter + '\\waterjetData_testDir\\pending\\' + projectSpecs.client_name + '\\' + projectSpecs.project_name);
+  
+      setTimeout(() => {
+        fse.remove(pathStringClientProject, err => {
+          if(err) return console.error(err);
+          console.log('dir removed successfully!')
+        });
+    
+        fs.readdir(pathStringClientProject, function(err, files) {
+          if (err) {
+             // some sort of error
+          } else {
+             if (!files.length) {
+                // directory appears to be empty
+                console.log('empty dir');
+                fse.remove(pathStringClientProject, err => {
+                  if(err) return console.error(err);
+                });
+             } else {
+                console.log('dir got files');
+  
+             }
+          }
+        });
+      }, 1000);
 
-           }
-        }
-      });
-    }, 1000);
-
-    // fse.removeSync(pathStringClientProject);
+      console.log('remove');
     
 
   } else {
-    const pathStringClient = path.join(specifiedDriveLetter + '\\waterjetData\\pending\\' + projectSpecs.client_name);
-    const pathStringClientProject = path.join(specifiedDriveLetter + '\\waterjetData\\pending\\' + projectSpecs.client_name + '\\' + projectSpecs.project_name);
-    const pathStringClientArchived = path.join(specifiedDriveLetter + '\\waterjetData\\archived\\' + projectSpecs.client_name);
-    const pathStringClientProjectArchived = path.join(specifiedDriveLetter + '\\waterjetData\\archived\\' + projectSpecs.client_name + '\\' + projectSpecs.project_name);
+
+  console.log(action);
+
+  console.log('else');
+    const pathStringClient = path.join(specifiedDriveLetter + '\\waterjetData_testDir\\pending\\' + projectSpecs.client_name);
+    const pathStringClientProject = path.join(specifiedDriveLetter + '\\waterjetData_testDir\\pending\\' + projectSpecs.client_name + '\\' + projectSpecs.project_name);
+    const pathStringClientArchived = path.join(specifiedDriveLetter + '\\waterjetData_testDir\\archived\\' + projectSpecs.client_name);
+    const pathStringClientProjectArchived = path.join(specifiedDriveLetter + '\\waterjetData_testDir\\archived\\' + projectSpecs.client_name + '\\' + projectSpecs.project_name);
 
 
     if (fs.existsSync(pathStringClient)) {
@@ -194,9 +140,9 @@ ipcMain.on('create-or-relocate-directory', (event, action, projectSpecs, specifi
 });
 
 ipcMain.on('write-to-file', (event, data, fileName, specifiedDriveLetter) => {
-  const pathString = path.join(specifiedDriveLetter + '\\waterjetData\\' + fileName + '.json');
+  const pathString = path.join(specifiedDriveLetter + '\\waterjetData_testDir\\' + fileName + '.json');
 
-  if (fs.existsSync(path.join(specifiedDriveLetter + '\\waterjetData\\'))) {
+  if (fs.existsSync(path.join(specifiedDriveLetter + '\\waterjetData_testDir\\'))) {
     fs.writeFileSync(pathString, data, {'flag':'a'},  function(err) {
       if (err) {
           return console.error(err);
@@ -219,20 +165,6 @@ chokidar.watch('X:/waterjetData/pendingOrder.txt').on('all', (event, path) => {
 
 //Use chokidar from top of page!
 ipcMain.on('watch-file', (event) => {
-  // const pathString = path.join(specifiedDriveLetter + '\\waterjetData\\' + fileName + '.json');
-
-  // if (fs.existsSync(path.join(specifiedDriveLetter + '\\waterjetData\\'))) {
-  //   fs.watch(pathString, (eventType, filename) => {
-  //     if (filename) {
-  //       event.sender.send('file-changed', filename)
-  //     }
-  //   });
-  // } else {
-  //   console.log('no exist - watch');
-  // }
-  // One-liner for current directory
-  
-  //event.sender.send('pending-order-changed');
   console.log('moved');
 });
 
@@ -255,7 +187,7 @@ ipcMain.on('database-interaction', (event, interaction, intendedQuery, projectDa
       host: '192.168.0.188',
       user: 'user1',
       password: '5nXSzVueHA1v2zMT',
-      database: 'waterjetDashboard',
+      database: 'waterjetDashboard_testDB',
     });
 
     // connect to mysql
@@ -329,6 +261,8 @@ const createWindow = () => {
 
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
+
+  mainWindow.maximize();
 
   // Open the DevTools.
   //mainWindow.webContents.openDevTools();
