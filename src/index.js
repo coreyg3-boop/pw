@@ -187,7 +187,8 @@ ipcMain.on('database-interaction', (event, interaction, intendedQuery, projectDa
       host: '192.168.0.188',
       user: 'user1',
       password: '5nXSzVueHA1v2zMT',
-      database: 'waterjetDashboard_testDB',
+      database: 'waterjetDashboard',
+      //database: 'waterjetDashboard_testDB',
     });
 
     // connect to mysql

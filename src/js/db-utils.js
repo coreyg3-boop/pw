@@ -15,7 +15,21 @@ const dbInteractionCall = (task, status, project) => {
         console.log(typeof(status))
         console.log(status)
         if(typeof(status) == 'Array' || typeof(status) == 'object') {
-            intendedQuery = 'SELECT * from `projects` WHERE `status` = ' + "'" + status[0] + "'" + ' OR `status` = ' + "'" + status[1] + "'";
+            let builtIntendedQuery = 'SELECT * from `projects` WHERE';
+            status.forEach((stat, index) => {
+                let statAppend;
+                if (index != (status.length - 1)) {
+                    statAppend = "`status` = '" + stat + "' OR ";
+                } else if (index == (status.length - 1)) {
+                    statAppend = "`status` = '" + stat + "'";
+                }
+
+                builtIntendedQuery += statAppend;
+            })
+            console.log(builtIntendedQuery);
+
+            //intendedQuery = 'SELECT * from `projects` WHERE `status` = ' + "'" + status[0] + "'" + ' OR `status` = ' + "'" + status[1] + "'";
+            intendedQuery = builtIntendedQuery;
         } else {
             intendedQuery = 'SELECT * from `projects` WHERE `status` = ' + "'" + status + "'";
         }
@@ -91,18 +105,28 @@ const dbInteractionCall = (task, status, project) => {
             if(typeof(status) == 'object') {
                 const pendingProjects = [];
                 const inProgressProjects = [];
+                const onHoldProjects = [];
                 const JSONProjects = JSON.parse(dataString);
 
                 for(let project in JSONProjects) {
+                    console.log(JSONProjects[project]);
                     if (JSONProjects[project].status == 'pending') {
                         pendingProjects.push(JSONProjects[project]);
                     } else if (JSONProjects[project].status == 'inProgress') {
                         inProgressProjects.push(JSONProjects[project]);
+                    } else if (JSONProjects[project].status == 'onHold') {
+                        onHoldProjects.push(JSONProjects[project]);
                     }
                 }
 
+                console.log(dataString);
+                console.log(pendingProjects);
+                console.log(inProgressProjects);
+                console.log(onHoldProjects);
+
                 window.sessionStorage.setItem('pending', JSON.stringify(pendingProjects));
                 window.sessionStorage.setItem('inProgress', JSON.stringify(inProgressProjects));
+                window.sessionStorage.setItem('onHold', JSON.stringify(onHoldProjects));
             } else {
                 window.sessionStorage.setItem(status, dataString);
             }

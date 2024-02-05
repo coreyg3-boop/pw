@@ -108,6 +108,10 @@ const makeTableCard = (project) => {
     statusDisplay = 'In Progress'
   }
 
+  if (statusDisplay == 'Onhold') {
+    statusDisplay = 'On Hold'
+  }
+
   if (project.priority != null) {
     project.priority = project.priority.toLowerCase();
     priorityDisplay = project.priority.replace(project.priority.charAt(0), project.priority.charAt(0).toUpperCase());
@@ -181,6 +185,19 @@ const makeTableCard = (project) => {
                                     <label for="completed">Move To Completed</label><br />
                                     <input type="radio" id="on_hold" name="status_update" value="On Hold">
                                     <label for="on_hold">Put On Hold</label>
+                                </div>
+                                `                                    
+                              } else if (project.status == 'onHold') {
+                                return `
+                                <div class="status-input">
+                                    <input type="radio" id="pending" name="status_update" value="Pending">
+                                    <label for="pending">Move To Pending</label><br />
+                                    <input type="radio" id="in_progress" name="status_update" value="In Progress">
+                                    <label for="in_progress">Move To In Progress</label><br />
+                                    <input type="radio" id="completed" name="status_update" value="Completed">
+                                    <label for="completed">Move To Completed</label><br />
+                                    <input type="radio" id="archived" name="status_update" value="Archived">
+                                    <label for="archived">Move To Archived</label><br />
                                 </div>
                                 `                                    
                               } else if (project.status == 'completed') {

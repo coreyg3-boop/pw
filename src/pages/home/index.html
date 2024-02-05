@@ -224,7 +224,7 @@
         background-color: #0528f1;
         box-shadow: -1px -1px 3px #092250 inset;
       }
-      .project-list-item .status.on-hold:before {
+      .project-list-item .status.onHold:before {
         content: '';
         background-color: rebeccapurple;
         box-shadow: -1px -1px 3px #3e1f5d inset
@@ -417,6 +417,11 @@
       .date-time-today .time {
         font-size: 1.25em;
       }
+      .on-hold-spacer {
+        margin-top: 50px;
+        padding-top: 50px;
+        border-top: 2px solid rgba(100,149,237,0.125)
+      }
 
     </style>
     <script>
@@ -509,12 +514,34 @@
       });
 
       const expandDetails = document.querySelectorAll('.details p');
+
       expandDetails.forEach((item, index) => {
         item.addEventListener(('click'), (e) => {
           const parentCard = e.target.parentElement.parentElement;
           parentCard.classList.toggle('expanded');
         })
       });
+
+      const moveOnHoldToBottom = () => {
+        const projectList = document.querySelector('#sortableProjectsList').children;
+        const sortableProjectList = document.querySelector('#sortableProjectsList');
+        const onHoldSpacer = document.createElement('div');
+        onHoldSpacer.classList.add('on-hold-spacer');
+
+
+
+        const projectListArr = [...projectList];
+
+        projectListArr.forEach((projectDiv) => {
+          const projectClassList = projectDiv.querySelector('.status');
+
+          if (projectClassList.classList.contains('onHold')) {
+            onHoldSpacer.appendChild(projectDiv);
+          }
+        })
+
+        sortableProjectList.appendChild(onHoldSpacer);
+      }
 
       const moveRushToTop = () => {
         const projectList = document.querySelector('#sortableProjectsList').children;
@@ -532,22 +559,28 @@
 
       const getPageProjects = () => {
         const projectList = document.querySelector('#sortableProjectsList');
-        dbUtils.dbInteractionCall('get', ['pending', 'inProgress'], 'list');
+        dbUtils.dbInteractionCall('get', ['pending', 'inProgress', 'onHold'], 'list');
 
         const addToPage = () => {
           try {
             setTimeout(() => {
               const cardListPending = fileHandler.populatePageWithSessionStorage('pending');
               const cardListInProgress = fileHandler.populatePageWithSessionStorage('inProgress');
+              const cardListOnHold = fileHandler.populatePageWithSessionStorage('onHold');
               const cardsPending = cardListPending.querySelectorAll('.project-list-item');
               const cardsInProgress = cardListInProgress.querySelectorAll('.project-list-item');
+              const cardsOnHold = cardListOnHold.querySelectorAll('.project-list-item');
               cardsPending.forEach((card) => {
                 projectList.appendChild(card);
               })
               cardsInProgress.forEach((card) => {
                 projectList.appendChild(card);
               })
+              cardsOnHold.forEach((card) => {
+                projectList.appendChild(card);
+              })
               moveRushToTop();
+              moveOnHoldToBottom();
             }, 100);
           } 
           catch (e) {
